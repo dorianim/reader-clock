@@ -15,7 +15,7 @@ with open('quotes.csv', encoding="utf-8") as f:
 
 quoteArray += "};"
 
-f = open("quoteObject.txt", "w", encoding="utf-8")
+f = open("quoteObject.h", "w", encoding="utf-8")
 f.write(quoteArray)
 f.close()
         
