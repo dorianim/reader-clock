@@ -12,6 +12,7 @@ ReaderClock::ReaderClock() {
 void ReaderClock::loop() {
     int newHour = this->_time->getHour();
     int newMinute = this->_time->getMinute();
+    Serial.printf("Current time: %d:%d", newHour, newMinute);
 
     if(this->_currentHour != newHour || this->_currentMinute != newMinute) {
         this->_currentHour = newHour;
@@ -19,7 +20,7 @@ void ReaderClock::loop() {
         this->_updateDisplay();
     }
 
-    sleep(10000);
+    delay(10000);
 }
 
 void ReaderClock::_updateDisplay() {

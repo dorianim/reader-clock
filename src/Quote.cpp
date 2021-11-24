@@ -1,6 +1,6 @@
 #include "Quote.h"
-//#include "../Quotes/quoteObject.h"
-#ifdef ARDUINO
+#include "../Quotes/quoteObject.h"
+/*#ifdef ARDUINO
 Quote QuoteDatas[] PROGMEM = {
 #else
 Quote QuoteDatas[] = {
@@ -9,7 +9,7 @@ Quote{"Zeit: ", "00:00", " Ende.", "Oscar Wilde", "The Picture of Dorian Gray ",
 Quote{"Zeit: ", "00:01", " Ende.", "Oscar Wilde", "The Picture of Dorian Gray ", 0, 1, false},
 Quote{"Zeit: ", "00:10", " Ende.", "Oscar Wilde", "The Picture of Dorian Gray ", 0, 10, false},
 Quote{"Zeit: ", "00:30", " Ende.", "Oscar Wilde", "The Picture of Dorian Gray ", 0, 30, false},
-};
+};*/
 
 QuoteList::QuoteList(size_t initialSize) {
     this->_array = (Quote*)malloc(initialSize * sizeof(Quote));
