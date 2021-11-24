@@ -34,15 +34,7 @@ void DisplayController::showQuote(Quote* quote) {
   #endif
   uint16_t cursor_y = box_y;
 
-  Serial.println(quote->text);
-
-  String firstPart = _splitString(quote->text, "|", 0, true);
-  String timePart = _splitString(quote->text, "|", 0, false);
-  String secondPart = _splitString(quote->text, "|", 1, false);
-
-  Serial.println(firstPart);
-  Serial.println(timePart);
-  Serial.println(secondPart);
+  Serial.println(quote->text());
 
   this->_display->setRotation(45);
   this->_display->setFont(_quoteFont);
@@ -50,32 +42,15 @@ void DisplayController::showQuote(Quote* quote) {
 
   this->_display->fillRect(box_x, box_y, box_w, box_h, GxEPD_WHITE);
   this->_display->setCursor(box_x, cursor_y+15);
-  this->_display->print(firstPart);
+  this->_display->print(quote->textBeforeTime());
   this->_display->setFont(_boldFont);
-  this->_display->print(timePart);
+  this->_display->print(quote->timeText());
   this->_display->setFont(_quoteFont);
-  this->_display->print(secondPart); 
+  this->_display->print(quote->textAfterTime()); 
   //this->display->updateWindow(box_x, box_y, box_w, box_h, true);
   #ifdef USE_GXEPD2
   this->_display->display();
   #else
   this->_display->update();
   #endif
-}
-
-char* DisplayController::_splitString(const char* string, const char* separator, int index, bool before)
-{
-    char* saveptr;
-    char* result = strdup("");
-    char* tmpString = strdup(string);
-
-    if(!before) index++;
-
-    for (int i = 0; i<= index; i++, tmpString = NULL) {
-        result = strtok_r(tmpString, separator, &saveptr);
-        if(result == NULL)
-            break;
-    }
-    
-    return result;
 }

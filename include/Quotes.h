@@ -1,15 +1,43 @@
 #ifndef QUOTE_H
 #define QUOTE_H
 
+#ifdef ARDUINO
 #include <Arduino.h>
+#else
+#include "stdlib.h"
+#include "string.h"
+#endif
 
-typedef struct Quote {
+typedef struct QuoteData {
     const char* text;
     const char* author;
     const char* title;
-    byte hour;
-    byte minute;
+    uint8_t hour;
+    uint8_t minute;
+    bool notSafeForWork;
 } quote_t;
+
+class Quote {
+    public:
+        explicit Quote(QuoteData data);
+
+        const char* text();
+        const char* author();
+        const char* title();
+
+        const char* textBeforeTime();
+        const char* timeText();
+        const char* textAfterTime();
+
+        uint8_t hour();
+        uint8_t minute();
+        bool notSafeForWork();
+
+    private:
+        QuoteData _data;
+
+        char* _splitString(const char* string, const char* separator, int index, bool before=true);
+};
 
 class QuoteList {
     public:
@@ -18,15 +46,15 @@ class QuoteList {
 
         static QuoteList* fromAllQuotes();
 
-        void append(Quote quote);
-        Quote at(int index);
+        void append(QuoteData quote);
+        QuoteData at(int index);
         int length();
 
     private:
         int _used;
         int _size;
 
-        Quote* _array;
+        QuoteData* _array;
 };
 
 #endif // QUOTE_H

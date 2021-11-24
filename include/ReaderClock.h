@@ -20,6 +20,9 @@ class ReaderClock {
         byte _currentMinute;
 
         void _updateDisplay();
+        // If no matching Quote is found, an older Quote is used
+        // It is up to accuracy minutes old
+        Quote* _findQuoteMatchingQuote(uint8_t hour, uint8_t minute, int accuracy);
 };
 
 #endif // READER_CLOCK_H

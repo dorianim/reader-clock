@@ -27,7 +27,6 @@ class DisplayController {
         #else
         GxEPD_Class* _display;
         #endif
-        char* _splitString(const char* string, const char* separator, int index, bool before=true);
 
         const GFXfont* _quoteFont;
         const GFXfont* _boldFont;
