@@ -1,10 +1,5 @@
 #include "Quotes.h"
-
-Quote quotes[] = {
-    Quote{"I reached the last level of the dungeon around |four o'clock in the morning| Number ONE.", "Ernest Cline", "Ready Player One", 4,0},
-    Quote{"I reached the last level of the dungeon around |four o'clock in the morning| Number TWO.", "Ernest Cline", "Ready Player One", 4,0},
-    Quote{"I reached the last level of the dungeon around |four o'clock in the morning| Number THREE.", "Ernest Cline", "Ready Player One", 4,0},
-};
+#include "../Quotes/quoteObject.h"
 
 QuoteList::QuoteList(size_t initialSize) {
     this->_array = (Quote*)malloc(initialSize * sizeof(Quote));

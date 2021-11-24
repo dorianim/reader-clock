@@ -5,11 +5,11 @@ RealTime::RealTime() {
 }
 
 int RealTime::getHour() {
-    return 4;
-    //return random(0,23);
+    //return 4;
+    return random(0,23);
 }
 
 int RealTime::getMinute() {
-    return 0;
-    //return random(0,59);
+    //return 0;
+    return random(0,59);
 }

@@ -11,7 +11,7 @@ with open('quotes.csv', encoding="utf-8") as f:
         end = start + len(quote[1])
         string = quote[2][:start] + "|" + quote[2][start:end] + "|"+ quote[2][end:]
         time = quote[0].split(":")
-        quoteArray += "Quote{\"" + string + "\", \"" + quote[4] + "\", \"" + quote[3] + "\", " + time[0] + ", " + time[1] + "},\n"
+        quoteArray += "Quote{\"" + string + "\", \"" + quote[4] + "\", \"" + quote[3] + "\", " + str(int(time[0])) + ", " + str(int(time[1])) + "},\n"
 
 quoteArray += "};"
 
