@@ -5,7 +5,7 @@ quoteArray = "Quote quotes[] = {\n"
 with open('quotes.csv', encoding="utf-8") as f: 
     for line in f:
         l = line.rstrip()
-        l = re.sub(r'(\"|\'|‘|“)+', "\\\"", l)
+        l = re.sub(r'(\"|‘|“|”)+', "\\\"", l)
         quote = l.split("|")
         start = quote[2].find(quote[1])
         end = start + len(quote[1])
