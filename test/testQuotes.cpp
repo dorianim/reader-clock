@@ -1,5 +1,5 @@
 #include <unity.h>
-#include "../src/Quotes.cpp"
+#include "../src/Quote.cpp"
 
 // void setUp(void) {
 // // set stuff up here
@@ -9,49 +9,43 @@
 // // clean stuff up here
 // }
 
-void test_textBeforeTime(void) {
-    Quote q = Quote(QuoteData{"1|2|3", "4", "5", 0, 0, false});
-    TEST_ASSERT_EQUAL_STRING("1", q.textBeforeTime());
+void test_findQuoteMatchingTime(void) {
+    TEST_ASSERT_TRUE(true)
+    QuoteList* quotes = new QuoteList(4);
+    quotes->append({"Zeit: ", "00:00", " Ende.", "Oscar Wilde", "The Picture of Dorian Gray ", 0, 0, false});
+    quotes->append({"Zeit: ", "00:01", " Ende.", "Oscar Wilde", "The Picture of Dorian Gray ", 0, 1, false});
+    quotes->append({"Zeit: ", "00:10", " Ende.", "Oscar Wilde", "The Picture of Dorian Gray ", 0, 10, false});
+    quotes->append({"Zeit: ", "00:30", " Ende.", "Oscar Wilde", "The Picture of Dorian Gray ", 0, 30, false});
 
-    q = Quote(QuoteData{"111|222|333", "4", "5", 0, 0, false});
-    TEST_ASSERT_EQUAL_STRING("111", q.textBeforeTime());
+    Quote* q = quotes->findQuoteMatchingTime(0,0,0);
+    TEST_ASSERT_FALSE(q == nullptr)
+    TEST_ASSERT_EQUAL_STRING("00:00", q->timeText);
 
-    q = Quote(QuoteData{"|2|3", "4", "5", 0, 0, false});
-    TEST_ASSERT_EQUAL_STRING("", q.textBeforeTime());
+    q = quotes->findQuoteMatchingTime(0,1,0);
+    TEST_ASSERT_EQUAL_STRING("00:01", q->timeText);
 
-    q = Quote(QuoteData{"|222|333", "4", "5", 0, 0, false});
-    TEST_ASSERT_EQUAL_STRING("", q.textBeforeTime());
-}
+    q = quotes->findQuoteMatchingTime(0,10,0);
+    TEST_ASSERT_EQUAL_STRING("00:10", q->timeText);
 
-void test_textAfterTime(void) {
-    Quote q = Quote(QuoteData{"1|2|3", "4", "5", 0, 0, false});
-    TEST_ASSERT_EQUAL_STRING("3", q.textAfterTime());
+    q = quotes->findQuoteMatchingTime(0,30,0);
+    TEST_ASSERT_EQUAL_STRING("00:30", q->timeText);
 
-    q = Quote(QuoteData{"111|222|333", "4", "5", 0, 0, false});
-    TEST_ASSERT_EQUAL_STRING("333", q.textAfterTime());
 
-    q = Quote(QuoteData{"1|2|", "4", "5", 0, 0, false});
-    TEST_ASSERT_EQUAL_STRING("", q.textAfterTime());
+    q = quotes->findQuoteMatchingTime(0,2,1);
+    TEST_ASSERT_EQUAL_STRING("00:01", q->timeText);
 
-    q = Quote(QuoteData{"111|222|", "4", "5", 0, 0, false});
-    TEST_ASSERT_EQUAL_STRING("", q.textAfterTime());
-}
+    q = quotes->findQuoteMatchingTime(0,5,4);
+    TEST_ASSERT_EQUAL_STRING("00:01", q->timeText);
 
-void test_timeText(void) {
-    Quote q = Quote(QuoteData{"1|2|3", "4", "5", 0, 0, false});
-    TEST_ASSERT_EQUAL_STRING("2", q.timeText());
-
-    q = Quote(QuoteData{"111|222|333", "4", "5", 0, 0, false});
-    TEST_ASSERT_EQUAL_STRING("222", q.timeText());
-
-    // The case of an empty time text is not supported!
+    q = quotes->findQuoteMatchingTime(0,5,2);
+    TEST_ASSERT_EQUAL_STRING("No qoute found, the time is: ", q->textBeforeTime);
+    TEST_ASSERT_EQUAL_STRING("00:05", q->timeText);
+    TEST_ASSERT_EQUAL_STRING("---", q->author);
 }
 
 void process() {
     UNITY_BEGIN();    // IMPORTANT LINE!
-    RUN_TEST(test_textBeforeTime);
-    RUN_TEST(test_textAfterTime);
-    RUN_TEST(test_timeText);
+    RUN_TEST(test_findQuoteMatchingTime);
     UNITY_END(); // stop unit testing
 }
 #ifdef ARDUINO

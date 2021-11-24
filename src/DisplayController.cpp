@@ -34,21 +34,19 @@ void DisplayController::showQuote(Quote* quote) {
   #endif
   uint16_t cursor_y = box_y;
 
-  Serial.println(quote->text());
-
   this->_display->setRotation(45);
   this->_display->setFont(_quoteFont);
-  this->_display->setTextColor(GxEPD_LIGHTGREY);
+  this->_display->setTextColor(GxEPD_BLACK);
 
   this->_display->fillRect(box_x, box_y, box_w, box_h, GxEPD_WHITE);
   this->_display->setCursor(box_x, cursor_y+15);
-  this->_display->print(quote->textBeforeTime());
+  this->_display->print(quote->textBeforeTime);
   this->_display->setFont(_boldFont);
   this->_display->setTextColor(GxEPD_BLACK);
-  this->_display->print(quote->timeText());
-  this->_display->setTextColor(GxEPD_LIGHTGREY);
+  this->_display->print(quote->timeText);
+  this->_display->setTextColor(GxEPD_BLACK);
   this->_display->setFont(_quoteFont);
-  this->_display->print(quote->textAfterTime()); 
+  this->_display->print(quote->textAfterTime); 
   //this->display->updateWindow(box_x, box_y, box_w, box_h, true);
   #ifdef USE_GXEPD2
   this->_display->display();

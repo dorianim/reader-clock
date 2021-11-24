@@ -14,7 +14,7 @@
 #include <Fonts/FreeSerifBold12pt7b.h>
 #include <Fonts/FreeSerif9pt7b.h>
 
-#include "Quotes.h"
+#include "Quote.h"
 
 class DisplayController {
     public:
@@ -29,7 +29,7 @@ class DisplayController {
         #endif
 
         const GFXfont* _quoteFont;
-        const GFXfont* _boldFont;
+        const GFXfont* _boldFont;   
 
 };
 
