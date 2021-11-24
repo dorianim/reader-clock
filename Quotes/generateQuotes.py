@@ -24,7 +24,7 @@ with open('quotes.csv', encoding="utf-8") as f:
         title = sanityze(quote[3])
 
         time = quote[0].split(":")
-        quoteArray += 'Quote{"' + textBeforeTime + '", "' + timeText + '", "' + textAfterTime + '", "' + author + '", "' + title + '", ' + str(int(time[0])) + ', ' + str(int(time[1])) + '},\n'
+        quoteArray += 'Quote{"' + textBeforeTime + '", "' + timeText + '", "' + textAfterTime + '", "' + author + '", "' + title + '", ' + str(int(time[0])) + ', ' + str(int(time[1])) + ', false},\n'
 
 quoteArray += "};"
 
