@@ -31,6 +31,8 @@ class DisplayController {
         const GFXfont* _quoteFont;
         const GFXfont* _boldFont;   
 
+        void _writeTextWithLinebraksAtSpaces(const char* text);
+
 };
 
 #endif // DISPLAY_CONTROLLER_H
