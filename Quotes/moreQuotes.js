@@ -4,6 +4,11 @@ var texts = [[["As midnight was striking bronze blows upon the dusky air, Dorian
 function getMinutes(i,j) {
     return (i*60) + j;
 }
+
+function sanitize(s) {
+    const regex = /<br>/g
+    return s.replace(regex, " ")
+}
 // The list element has the index of the minute it is in
 
 let niceTexts = []
@@ -12,7 +17,7 @@ for(let hour = 0; hour < 24; hour++) {
         thisMinuteTexts = texts[getMinutes(hour, minute)]
         for(let i = 0; i < thisMinuteTexts.length; i++) {
             thisText = thisMinuteTexts[i]
-            niceTexts.push([thisText[0], thisText[2], thisText[1], hour, minute, thisText[3]])
+            niceTexts.push([hour + ":" + minute, sanitize(thisText[0]), sanitize(thisText[1]), sanitize(thisText[2]), thisText[3]])
         }
     }
 }
@@ -20,7 +25,21 @@ for(let hour = 0; hour < 24; hour++) {
 console.log(niceTexts)
 const fs = require('fs')
 
-fs.writeFile('./moreQuotes.json', JSON.stringify(niceTexts), err => {
+let csvString = ""
+for(let i = 0; i < niceTexts.length; i++) {
+    csvString += niceTexts[i].join("|")
+    csvString += "\n"
+}
+
+/*fs.writeFile('./moreQuotes.json', JSON.stringify(niceTexts), err => {
+    if (err) {
+      console.error(err)
+      return
+    }
+    //file written successfully
+  })*/
+
+  fs.writeFile('./moreQuotes.csv', csvString, err => {
     if (err) {
       console.error(err)
       return
