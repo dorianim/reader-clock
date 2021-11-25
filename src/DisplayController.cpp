@@ -40,17 +40,50 @@ void DisplayController::showQuote(Quote* quote) {
 
   this->_display->fillRect(box_x, box_y, box_w, box_h, GxEPD_WHITE);
   this->_display->setCursor(box_x, cursor_y+15);
-  this->_display->print(quote->textBeforeTime);
+  this->_writeTextWithLinebraksAtSpaces(quote->textBeforeTime);
   this->_display->setFont(_boldFont);
   this->_display->setTextColor(GxEPD_BLACK);
-  this->_display->print(quote->timeText);
+  this->_writeTextWithLinebraksAtSpaces(quote->timeText);
   this->_display->setTextColor(GxEPD_BLACK);
   this->_display->setFont(_quoteFont);
-  this->_display->print(quote->textAfterTime); 
+  this->_writeTextWithLinebraksAtSpaces(quote->textAfterTime); 
   //this->display->updateWindow(box_x, box_y, box_w, box_h, true);
   #ifdef USE_GXEPD2
   this->_display->display();
   #else
   this->_display->update();
   #endif
+}
+
+void DisplayController::_writeTextWithLinebraksAtSpaces(const char* text) {
+
+  //int16_t boxTopLeftX = 0;
+  //int16_t boxToLeftY = 15;
+  uint16_t boxWidth = this->_display->width();
+  //uint16_t boxHeight = this->_display->height();
+
+  char* saveptr;
+  char* result = strdup("");
+  char* tmpString = strdup(text);
+
+  while (1) {
+    result = strtok_r(tmpString, " ", &saveptr);
+    delete tmpString;
+    tmpString = NULL;
+    if(result == NULL) break;
+
+    int16_t currentX = this->_display->getCursorX();
+    int16_t currentY = this->_display->getCursorY();
+    int16_t x, y;
+    uint16_t w, h;
+    this->_display->getTextBounds(result, currentX, currentY, &x, &y, &w, &h);
+    
+    if(currentX + w > boxWidth) {
+      this->_display->println();
+    }
+
+    this->_display->print(result);
+    this->_display->print(" ");
+  }
+
 }
