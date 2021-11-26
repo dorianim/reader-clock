@@ -43,7 +43,7 @@ DisplayController::DisplayController(): _quoteFont{&FreeSerif9pt7b}, _boldFont{&
 }
 
 void DisplayController::showQuote(Quote* quote) {
-  this->_display->fillRect(this->_drawAreaX, this->_drawAreaY, this->_drawAreaWidth, this->_drawAreaHeight, GxEPD_WHITE);
+  this->_display->fillScreen(GxEPD_WHITE);
 
   // Author and title
   this->_display->setFont(_quoteFont);
