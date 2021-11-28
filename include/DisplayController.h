@@ -28,10 +28,19 @@ class DisplayController {
         GxEPD_Class* _display;
         #endif
 
+        uint16_t _padding;
+        uint16_t _drawAreaX;
+        uint16_t _drawAreaY;
+        uint16_t _drawAreaWidth;
+        uint16_t _drawAreaHeight;
+
         const GFXfont* _quoteFont;
         const GFXfont* _boldFont;   
 
-        void _writeTextWithLinebraksAtSpaces(const char* text);
+        void _printTextWithBreaksAtSpaces(const char* text, uint16_t maximumY, bool wrap = true);
+        void _printAuothorAndTitle(const char* author, const char* title, uint16_t *printedHeight);
+        uint16_t _getWidthOfString(const char* string, int16_t x=0, int16_t y=0);
+        uint16_t _getHeightOfString(const char* string, int16_t x=0, int16_t y=0);
 
 };
 
