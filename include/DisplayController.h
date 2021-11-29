@@ -1,11 +1,12 @@
 #ifndef DISPLAY_CONTROLLER_H
 #define DISPLAY_CONTROLLER_H
 
+#define USE_GXEPD2
 #ifdef USE_GXEPD2
-#include <GxEPD2_BW.h>
+#include <GxEPD2_3C.h>
 #else
 #include <GxEPD.h>
-#include <GxGDEW027W3/GxGDEW027W3.h>
+#include <GxGDEW042Z15/GxGDEW042Z15.h>
 #include <GxIO/GxIO_SPI/GxIO_SPI.h>
 #include <GxIO/GxIO.h>
 #endif
@@ -23,7 +24,7 @@ class DisplayController {
 
     private:
         #ifdef USE_GXEPD2
-        GxEPD2_BW<GxEPD2_270, GxEPD2_270::HEIGHT> *_display;
+        GxEPD2_3C<GxEPD2_420c_V2, GxEPD2_420c_V2::HEIGHT> *_display;
         #else
         GxEPD_Class* _display;
         #endif

@@ -6,7 +6,7 @@ DisplayController::DisplayController(): _quoteFont{&FreeSerif9pt7b}, _boldFont{&
     // https://www.waveshare.com/product/displays/e-paper/2.7inch-e-paper-hat.htm
 
     #ifdef USE_GXEPD2
-    this->_display = new GxEPD2_BW<GxEPD2_270, GxEPD2_270::HEIGHT>(GxEPD2_270(/*CS=5*/ SS, /*DC=*/ 17, /*RST=*/ 16, /*BUSY=*/ 4));
+    this->_display = new GxEPD2_3C<GxEPD2_420c_V2, GxEPD2_420c_V2::HEIGHT>(GxEPD2_420c_V2(/*CS=5*/ SS, /*DC=*/ 17, /*RST=*/ 16, /*BUSY=*/ 4));
     #else
         GxIO_Class* io = new GxIO_Class(SPI, /*CS=5*/ SS, /*DC=*/ 17, /*RST=*/ 16); // arbitrary selection of 17, 16
         this->_display = new GxEPD_Class(*io, /*RST=*/ 16, /*BUSY=*/ 4); // arbitrary selection of (16), 4
@@ -24,13 +24,8 @@ DisplayController::DisplayController(): _quoteFont{&FreeSerif9pt7b}, _boldFont{&
     this->_display->setRotation(45);
     Serial.println("Clearing done");
 
-    #ifdef USE_GXEPD2
-    uint16_t displayWidth = GxEPD2_270::HEIGHT;
-    uint16_t displayHeight = GxEPD2_270::WIDTH;
-    #else
     uint16_t displayWidth = this->_display->width();
     uint16_t displayHeight = this->_display->height();
-    #endif
     Serial.printf("Display size: w: %d, h: %d\n", displayWidth, displayHeight);
 
     this->_padding = float(displayHeight) * 0.03;
