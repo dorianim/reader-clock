@@ -80,7 +80,7 @@ void DisplayController::_printTextWithBreaksAtSpaces(const char* text, uint16_t 
   if(this->_display->getCursorY() >= maximumY)
     return;
 
-  int textLength = sizeof(&text) / sizeof(char);
+  int textLength = strlen(text);
   if(textLength > 0 && text[0] == ' ')
     this->_display->print(" ");
 
@@ -119,7 +119,7 @@ void DisplayController::_printTextWithBreaksAtSpaces(const char* text, uint16_t 
     previousWidth = w;
   }
 
-  if(textLength > 0 && text[textLength-2] == ' ')
+  if(textLength > 0 && text[textLength-1] == ' ')
     this->_display->print(" ");
 
 }
@@ -155,7 +155,6 @@ void DisplayController::_printAuothorAndTitle(const char* author, const char* ti
     }
 
     for(int j=1; j < 4 && wasTrimmed; j++) {
-      // we need to start at length -1 because the last char is empty by design
       trimmedString[trimmedString.length()-j] = '.';
     }
 
