@@ -1,7 +1,7 @@
 #include "DisplayController.h"
 #define MAX(a,b) (((a)>(b))?(a):(b))
 
-DisplayController::DisplayController(): _quoteFont{&FreeSerif9pt7b}, _boldFont{&FreeSerifBold12pt7b} {
+DisplayController::DisplayController(): _quoteFont{&FreeSerif12pt7b}, _boldFont{&FreeSerifBold18pt7b} {
     // GDEW027W3 2.7" b/w
     // https://www.waveshare.com/product/displays/e-paper/2.7inch-e-paper-hat.htm
 
@@ -12,20 +12,23 @@ DisplayController::DisplayController(): _quoteFont{&FreeSerif9pt7b}, _boldFont{&
         this->_display = new GxEPD_Class(*io, /*RST=*/ 16, /*BUSY=*/ 4); // arbitrary selection of (16), 4
     #endif
 
-    this->_display->init();
+    this->_display->init(115200, true, 2, false);
     this->_display->setTextWrap(false); // wrapping is done manually
     Serial.println("Init done");
-    this->_display->fillScreen(GxEPD_WHITE);
+    //this->_display->fillScreen(GxEPD_WHITE);
     #ifdef USE_GXEPD2
-    this->_display->display();
+    //this->_display->display();
     #else
     this->_display->update();
     #endif
+    #ifdef ROTATE
     this->_display->setRotation(45);
+    #endif
     Serial.println("Clearing done");
 
     uint16_t displayWidth = this->_display->width();
     uint16_t displayHeight = this->_display->height();
+
     Serial.printf("Display size: w: %d, h: %d\n", displayWidth, displayHeight);
 
     this->_padding = float(displayHeight) * 0.03;
@@ -52,7 +55,7 @@ void DisplayController::showQuote(Quote* quote) {
   this->_display->setTextColor(GxEPD_BLACK);
   this->_printTextWithBreaksAtSpaces(quote->textBeforeTime, maxiumY);
   this->_display->setFont(_boldFont);
-  this->_display->setTextColor(GxEPD_BLACK);
+  this->_display->setTextColor(GxEPD_RED);
   this->_printTextWithBreaksAtSpaces(quote->timeText, maxiumY);
   this->_display->setTextColor(GxEPD_BLACK);
   this->_display->setFont(_quoteFont);
@@ -77,11 +80,18 @@ void DisplayController::_printTextWithBreaksAtSpaces(const char* text, uint16_t 
   if(this->_display->getCursorY() >= maximumY)
     return;
 
+  int textLength = sizeof(&text) / sizeof(char);
+  if(textLength > 0 && text[0] == ' ')
+    this->_display->print(" ");
+
   while (1) {
     result = strtok(tmpString, " ");
     delete tmpString;
-    tmpString = NULL;
     if(result == NULL) break;
+
+    if(tmpString == NULL)
+      this->_display->print(" ");
+    tmpString = NULL;
 
     int16_t currentX = this->_display->getCursorX();
     int16_t currentY = this->_display->getCursorY();
@@ -107,8 +117,10 @@ void DisplayController::_printTextWithBreaksAtSpaces(const char* text, uint16_t 
     previousX = this->_display->getCursorX();
     previousHeight = this->_getHeightOfString(result);
     previousWidth = w;
-    this->_display->print(" ");
   }
+
+  if(textLength > 0 && text[textLength-2] == ' ')
+    this->_display->print(" ");
 
 }
 

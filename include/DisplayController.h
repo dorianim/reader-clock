@@ -12,8 +12,8 @@
 #endif
 
 
-#include <Fonts/FreeSerifBold12pt7b.h>
-#include <Fonts/FreeSerif9pt7b.h>
+#include <Fonts/FreeSerifBold18pt7b.h>
+#include <Fonts/FreeSerif12pt7b.h>
 
 #include "Quote.h"
 
