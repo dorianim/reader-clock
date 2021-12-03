@@ -12,7 +12,7 @@ ReaderClock::ReaderClock() {
 void ReaderClock::loop() {
     int newHour = this->_time->getHour();
     int newMinute = this->_time->getMinute();
-    Serial.printf("Current time: %d:%d", newHour, newMinute);
+    Serial.printf("Current time: %d:%d\n", newHour, newMinute);
 
     if(this->_currentHour != newHour || this->_currentMinute != newMinute) {
         this->_currentHour = newHour;
