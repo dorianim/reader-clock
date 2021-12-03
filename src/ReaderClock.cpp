@@ -3,6 +3,7 @@
 ReaderClock::ReaderClock() {
     randomSeed(analogRead(0));
     this->_display = new DisplayController();
+    this->_networkController = new NetworkController();
     this->_time = new RealTime();
     this->_currentHour = -1;
     this->_currentMinute = -1;
@@ -12,15 +13,15 @@ ReaderClock::ReaderClock() {
 void ReaderClock::loop() {
     int newHour = this->_time->getHour();
     int newMinute = this->_time->getMinute();
-    Serial.printf("Current time: %d:%d\n", newHour, newMinute);
 
     if(this->_currentHour != newHour || this->_currentMinute != newMinute) {
+        Serial.printf("Current time: %d:%d\n", newHour, newMinute);
         this->_currentHour = newHour;
         this->_currentMinute = newMinute;
         this->_updateDisplay();
     }
 
-    delay(10000);
+    this->_networkController->loop();
 }
 
 void ReaderClock::_updateDisplay() {

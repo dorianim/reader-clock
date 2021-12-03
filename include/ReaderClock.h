@@ -2,6 +2,7 @@
 #define READER_CLOCK_H
 
 #include "DisplayController.h"
+#include "NetworkController.h"
 #include "RealTime.h"
 #include "Quote.h"
 //#include "Arduino.h"
@@ -13,6 +14,7 @@ class ReaderClock {
 
     private:
         DisplayController* _display;
+        NetworkController* _networkController;
         RealTime* _time;
         QuoteList* _quotes;
 
