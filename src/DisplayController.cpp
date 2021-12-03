@@ -1,12 +1,12 @@
 #include "DisplayController.h"
 #define MAX(a,b) (((a)>(b))?(a):(b))
 
-DisplayController::DisplayController(): _quoteFont{&FreeSerif12pt7b}, _boldFont{&FreeSerifBold18pt7b} {
+DisplayController::DisplayController(): _quoteFont{&FreeSerif12pt7b}, _boldFont{&FreeSerifBold12pt7b} {
     // GDEW027W3 2.7" b/w
     // https://www.waveshare.com/product/displays/e-paper/2.7inch-e-paper-hat.htm
 
     #ifdef USE_GXEPD2
-    this->_display = new GxEPD2_3C<GxEPD2_420c_V2, GxEPD2_420c_V2::HEIGHT>(GxEPD2_420c_V2(/*CS=5*/ SS, /*DC=*/ 17, /*RST=*/ 16, /*BUSY=*/ 4));
+    this->_display = new GxEPD2_BW<GxEPD2_420, GxEPD2_420::HEIGHT>(GxEPD2_420(/*CS=5*/ SS, /*DC=*/ 17, /*RST=*/ 16, /*BUSY=*/ 4));
     #else
         GxIO_Class* io = new GxIO_Class(SPI, /*CS=5*/ SS, /*DC=*/ 17, /*RST=*/ 16); // arbitrary selection of 17, 16
         this->_display = new GxEPD_Class(*io, /*RST=*/ 16, /*BUSY=*/ 4); // arbitrary selection of (16), 4
@@ -31,7 +31,7 @@ DisplayController::DisplayController(): _quoteFont{&FreeSerif12pt7b}, _boldFont{
 
     Serial.printf("Display size: w: %d, h: %d\n", displayWidth, displayHeight);
 
-    this->_padding = float(displayHeight) * 0.03;
+    this->_padding = float(displayHeight) * 0.05;
     this->_drawAreaX = this->_padding;
     this->_drawAreaY = this->_padding;
     this->_drawAreaHeight = displayHeight - (this->_padding * 2);
@@ -55,7 +55,7 @@ void DisplayController::showQuote(Quote* quote) {
   this->_display->setTextColor(GxEPD_BLACK);
   this->_printTextWithBreaksAtSpaces(quote->textBeforeTime, maxiumY);
   this->_display->setFont(_boldFont);
-  this->_display->setTextColor(GxEPD_RED);
+  this->_display->setTextColor(GxEPD_BLACK);
   this->_printTextWithBreaksAtSpaces(quote->timeText, maxiumY);
   this->_display->setTextColor(GxEPD_BLACK);
   this->_display->setFont(_quoteFont);
@@ -166,7 +166,7 @@ void DisplayController::_printAuothorAndTitle(const char* author, const char* ti
     if(i == 0)
       y = this->_drawAreaY + this->_drawAreaHeight - height;
     else
-      y = previousY - height - this->_padding;
+      y = previousY - height - this->_padding * 0.5;
     
     previousY = y;
 

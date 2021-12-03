@@ -3,7 +3,7 @@
 
 #define USE_GXEPD2
 #ifdef USE_GXEPD2
-#include <GxEPD2_3C.h>
+#include <GxEPD2_BW.h>
 #else
 #include <GxEPD.h>
 #include <GxGDEW042Z15/GxGDEW042Z15.h>
@@ -12,7 +12,7 @@
 #endif
 
 
-#include <Fonts/FreeSerifBold18pt7b.h>
+#include <Fonts/FreeSerifBold12pt7b.h>
 #include <Fonts/FreeSerif12pt7b.h>
 
 #include "Quote.h"
@@ -24,7 +24,7 @@ class DisplayController {
 
     private:
         #ifdef USE_GXEPD2
-        GxEPD2_3C<GxEPD2_420c_V2, GxEPD2_420c_V2::HEIGHT> *_display;
+        GxEPD2_BW<GxEPD2_420, GxEPD2_420::HEIGHT> *_display;
         #else
         GxEPD_Class* _display;
         #endif
