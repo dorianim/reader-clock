@@ -9,13 +9,20 @@ NetworkController::NetworkController() {
     this->_config->psk = "R3aderC7ock";
     this->_config->title = "Reader Clock";
     this->_config->autoReconnect = true;
+    this->_config->menuItems = AC_MENUITEM_CONFIGNEW | AC_MENUITEM_OPENSSIDS | AC_MENUITEM_UPDATE;
+    this->_config->apip = IPAddress(192,168,0,1);
 
     this->_server = new WebServer();
     this->_autoConnect = new AutoConnect(*this->_server);
     this->_autoConnect->config(*this->_config);
     this->_autoConnect->begin();
+
     this->_autoConnect->onConnect([this](IPAddress& ipaddr){
         this->_handleOnConnect(ipaddr);
+    });
+    this->_autoConnect->onNotFound([this](){
+        this->_server->sendHeader("Location", "/_ac");
+        this->_server->send(301, "", "");
     });
 }
 

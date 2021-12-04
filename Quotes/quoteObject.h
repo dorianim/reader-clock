@@ -1,4 +1,4 @@
-Quote QuoteDatas[] = {
+Quote QuoteDatas[] PROGMEM= {
 Quote{"As ", "midnight", " was striking bronze blows upon the dusky air, Dorian Gray, dressed commonly, and with a muffler wrapped round his throat, crept quietly out of his house.", "Oscar Wilde", "The Picture of Dorian Gray ", 0, 0, false},
 Quote{"\"But wait till I tell you,\" he said. :We had a ", "midnight", " lunch too after all the jollification and when we sallied forth it was blue o'clock the morning after the night before\"", "James Joyce", "Ulysses ", 0, 0, false},
 Quote{"\"", "Midnight", ",\" you said. What is midnight to the young? And suddenly a festive blaze was flung Across five cedar trunks, snow patches showed, And a patrol car on our bumpy road Came to a crunching stop. Retake, retake!\"", "Vladimir Nabokov", "Pale Fire ", 0, 0, false},
