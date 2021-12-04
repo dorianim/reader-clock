@@ -11,6 +11,7 @@ public:
     explicit NetworkController();
 
     void loop();
+    static bool connected();
 
 private:
     WebServer* _server;

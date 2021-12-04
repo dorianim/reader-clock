@@ -1,6 +1,10 @@
 #include "RealTime.h"
 
-RealTime::RealTime() {
+RealTime::RealTime() : 
+    _lastSync(-1),
+    _timezoneOffset(1) 
+{
+
     this->_rtc = new RTC_DS3231();
 
     if (!this->_rtc->begin()) {
@@ -8,14 +12,16 @@ RealTime::RealTime() {
     }
 
     if (this->_rtc->lostPower()) {
-        Serial.println("RTC lost power, let's set the time!");
-        // When time needs to be set on a new device, or after a power loss, the
-        // following line sets the RTC to the date & time this sketch was compiled
-        this->_rtc->adjust(DateTime(F(__DATE__), F(__TIME__)));
-        // This line sets the RTC with an explicit date & time, for example to set
-        // January 21, 2014 at 3am you would call:
-        // rtc.adjust(DateTime(2014, 1, 21, 3, 0, 0));
+        Serial.println("RTC lost power, we don't have a valid time!");
+        this->_hasValidTime = false;
     }
+    else {
+        this->_hasValidTime = true;
+    }
+}
+
+void RealTime::loop() {
+    this->_sync();
 }
 
 int RealTime::getHour() {
@@ -26,4 +32,47 @@ int RealTime::getHour() {
 int RealTime::getMinute() {
     DateTime now = this->_rtc->now();
     return now.minute();
+}
+
+long RealTime::getTime() {
+    DateTime now = this->_rtc->now();
+    return now.unixtime();
+}
+
+bool RealTime::hasValidTime() {
+    return this->_hasValidTime;
+}
+
+bool RealTime::_shouldSync() {
+    return (
+            !this->hasValidTime() || 
+            this->_lastSync < 0 || 
+            this->getTime() - this->_lastSync > 60 * 60
+        ) 
+        && NetworkController::connected();
+}
+
+void RealTime::_sync() {
+    if(!this->_shouldSync()) return;
+
+    Serial.println("Starting timesync");
+    configTime(this->_timezoneOffset*60*60, 60*60*1000, "pool.ntp.org");
+    struct tm timeinfo;
+    if(!getLocalTime(&timeinfo)){
+        Serial.println("Timesync failed!");
+    } 
+    else {
+        this->_rtc->adjust(DateTime(
+            timeinfo.tm_year, 
+            timeinfo.tm_mon, 
+            timeinfo.tm_mday, 
+            timeinfo.tm_hour, 
+            timeinfo.tm_min, 
+            timeinfo.tm_sec
+            ));
+        this->_hasValidTime = true;
+        this->_lastSync = this->getTime();
+        Serial.println("Timesync successfull!");
+        Serial.printf("The time is now: %d:%d\n", this->getHour(), this->getMinute());
+    }
 }

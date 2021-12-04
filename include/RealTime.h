@@ -3,15 +3,28 @@
 
 #include "Arduino.h"
 #include "RTClib.h"
+#include "time.h"
+#include "NetworkController.h"
 
 class RealTime {
     public:
         explicit RealTime();
+        void loop();
         int getHour();
         int getMinute();
+        long getTime();
+
+        bool hasValidTime();
 
     private:
+        long _lastSync;
+        int _timezoneOffset;
+        bool _hasValidTime;
         RTC_DS3231* _rtc;
+
+        bool _shouldSync();
+        void _sync();
+
 };
 
 #endif // REAL_TIME_H

@@ -37,3 +37,7 @@ void NetworkController::_handleOnConnect(IPAddress& ipaddr) {
         WiFi.enableAP(false);
     }
 }
+
+bool NetworkController::connected() {
+    return WiFi.status() == WL_CONNECTED;
+}

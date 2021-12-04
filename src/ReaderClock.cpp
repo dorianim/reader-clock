@@ -22,6 +22,7 @@ void ReaderClock::loop() {
     }
 
     this->_networkController->loop();
+    this->_time->loop();
 }
 
 void ReaderClock::_updateDisplay() {
