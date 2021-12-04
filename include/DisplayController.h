@@ -14,13 +14,16 @@
 
 #include <Fonts/FreeSerifBold12pt7b.h>
 #include <Fonts/FreeSerif12pt7b.h>
+#include <Arduino.h>
 
 #include "Quote.h"
+#include "DisplayControllerIcons.h"
 
 class DisplayController {
     public:
         explicit DisplayController();
         void showQuote(Quote* quote);
+        void showWarning(const char* message);
 
     private:
         #ifdef USE_GXEPD2

@@ -12,7 +12,14 @@ class ReaderClock {
         explicit ReaderClock();
         void loop();
 
+        typedef enum State {
+            Initing,
+            NoValidTime,
+            ShowingQuotes
+        } state_t;
+
     private:
+
         DisplayController* _display;
         NetworkController* _networkController;
         RealTime* _time;
@@ -20,8 +27,14 @@ class ReaderClock {
 
         byte _currentHour;
         byte _currentMinute;
+        State _state;
+        State _oldState;
 
+        void _setState(State state);
+        void _updateState();
         void _updateDisplay();
+        void _drawQuoteToDisplay();
+        void _drawTimeErrorToDisplay();
 };
 
 #endif // READER_CLOCK_H

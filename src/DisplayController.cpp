@@ -68,6 +68,26 @@ void DisplayController::showQuote(Quote* quote) {
   #endif
 }
 
+void DisplayController::showWarning(const char* message) {
+  this->_display->fillScreen(GxEPD_WHITE);
+
+  this->_display->drawBitmap(
+    this->_drawAreaX + (this->_drawAreaWidth - exclamationTriangleSolidWidth) / 2, 
+    this->_drawAreaY, 
+    (uint8_t *)exclamationTriangleSolidBitmap, 
+    exclamationTriangleSolidWidth, 
+    exclamationTriangleSolidHeight, 
+    GxEPD_BLACK
+  );
+
+  this->_display->setFont(_boldFont);
+  this->_display->setTextColor(GxEPD_BLACK);
+  this->_display->setCursor(this->_drawAreaX, this->_drawAreaY + 2 * exclamationTriangleSolidHeight + this->_padding);
+  this->_printTextWithBreaksAtSpaces(message, this->_drawAreaY + this->_drawAreaHeight);
+
+  this->_display->display();
+}
+
 void DisplayController::_printTextWithBreaksAtSpaces(const char* text, uint16_t maximumY, bool wrap) {
 
   char* result = strdup("");
