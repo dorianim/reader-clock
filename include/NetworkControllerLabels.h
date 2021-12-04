@@ -14,7 +14,7 @@
 #define AUTOCONNECT_MENULABEL_CONFIGNEW "Setup Network"
 
 #undef AUTOCONNECT_PAGETITLE_STATISTICS
-#define AUTOCONNECT_PAGETITLE_STATISTICS "Statistics - Reader Clock"
+#define AUTOCONNECT_PAGETITLE_STATISTICS "Reader Clock"
 
 #undef AUTOCONNECT_PAGETITLE_CONFIG
 #define AUTOCONNECT_PAGETITLE_CONFIG "Setup Network - Reader Clock"
@@ -27,6 +27,22 @@
 
 #undef AUTOCONNECT_PAGETITLE_CREDENTIALS
 #define AUTOCONNECT_PAGETITLE_CREDENTIALS "Known Networks - Reader Clock"
+
+#undef AUTOCONNECT_TEXT_UPDATINGFIRMWARE
+#define AUTOCONNECT_TEXT_UPDATINGFIRMWARE "Firmware update \
+<style> \
+.s_cap { \
+	display: block; \
+	text-align: left; \
+	font-size: small; \
+} \
+.aux-page input[type='button'], .aux-page button[type='button'] { \
+	margin-left: 0px; \
+} \
+.aux-page label { \
+	padding: 0px; \
+} \
+</style>"
 
 #undef AUTOCONNECT_PAGESTATS_ESTABLISHEDCONNECTION
 #define AUTOCONNECT_PAGESTATS_ESTABLISHEDCONNECTION "</td><td></td></tr><tr><td>Connected to network:"

@@ -11,6 +11,8 @@ NetworkController::NetworkController() {
     this->_config->autoReconnect = true;
     this->_config->menuItems = AC_MENUITEM_CONFIGNEW | AC_MENUITEM_OPENSSIDS | AC_MENUITEM_UPDATE;
     this->_config->apip = IPAddress(192,168,0,1);
+    this->_config->ota = AC_OTA_BUILTIN;
+    this->_config->otaExtraCaption = "Current version: " FIRMWARE_VERSION;
 
     this->_server = new WebServer();
     this->_autoConnect = new AutoConnect(*this->_server);

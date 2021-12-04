@@ -4,6 +4,7 @@
 #include <WiFi.h>
 #include <WebServer.h>
 #include "AutoConnect.h"
+#include "FirmwareVersion.h"
 
 class NetworkController {
 
