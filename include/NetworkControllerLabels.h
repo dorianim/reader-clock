@@ -42,6 +42,11 @@
 .aux-page label { \
 	padding: 0px; \
 } \
+input[type='button'], button[type='button'] { \
+    background-color: #006064; \
+    border-color: #006064; \
+    width: 15em; \
+} \
 </style>"
 
 #undef AUTOCONNECT_PAGESTATS_ESTABLISHEDCONNECTION
