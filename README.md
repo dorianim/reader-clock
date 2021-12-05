@@ -8,7 +8,7 @@ Huge thanks to these people for publishing their quotes:
 
 ### Used Libs
 - [AutoConnect](https://github.com/Hieromon/AutoConnect)
-- [GxEPD2](https://github.com/ZinggJM/GxEPD2)
+- [GxEPD2](https://github.com/ZinggJM/GxEPD2) (Stripped down to save some storage capacity)
 - [RTClib](https://github.com/adafruit/RTClib)
 
 ### Used hardware
