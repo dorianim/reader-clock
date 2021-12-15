@@ -1602,4 +1602,4 @@ Quote{"\"Wells looked out at the street. \"What time is it?\" he said. Chigurh r
 Quote{"Humans emerge ", "one minute and seventeen seconds before midnight", ". The whole of our recorded history, on this scale, would be no more than a few seconds, a single human lifetime barely an instant.", "Bill Bryson", "A Short History of Nearly Everything", 23, 58, false},
 Quote{"At ", "one minute to twelve", ", she was sure of it, and cursed herself for even thinking for a moment the cat-creature would help her escape.", "Garth Nix", "Clariel", 23, 59, false},
 Quote{"At ", "a minute to midnight", ", Roquenton was holding his wife's hand and giving her some last words of advice. On the stroke of midnight, she felt her companion's hand melt away inside her own.", "Marcel Ayme", "The Man Who Walked Through Walls", 23, 59, false},
-}
+};
