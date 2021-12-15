@@ -1,5 +1,5 @@
 #include "Quote.h"
-#include "../Quotes/quoteObject.h"
+#include "../Quotes/completeQuoteObject.h"
 /*#ifdef ARDUINO
 Quote QuoteDatas[] PROGMEM = {
 #else
