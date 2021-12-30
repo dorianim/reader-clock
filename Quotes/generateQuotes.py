@@ -93,11 +93,6 @@ while list:
         checkIndex = len(seen) - 1
         seq = []
         while checkIndex >= 0 and seen[checkIndex]["timeHour"] == x["timeHour"] and seen[checkIndex]["timeMinute"] == x["timeMinute"]:
-            if seen[checkIndex]["timeHour"] == "23" and seen[checkIndex]["timeMinute"] == "53": 
-                print(''.join(e for e in str(seen[len(seen) - 1]) if e.isalnum()))
-                print(''.join(e for e in str(x) if e.isalnum()))
-                print(x)
-                print('\n')
             seq.append(difflib.SequenceMatcher(a=''.join(e for e in str(seen[checkIndex]) if e.isalnum()), b=''.join(e for e in str(x) if e.isalnum())).quick_ratio())
             checkIndex -= 1
         if any(seqValue > 0.9 for seqValue in seq): 
