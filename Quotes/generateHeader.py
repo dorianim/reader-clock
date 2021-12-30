@@ -21,7 +21,7 @@ with open('AllQuotesWithoutDuplicates.json', encoding="utf-8") as f:
                 e["textBefore"] = "..." + ' '.join(textArr)
         headerString += 'Quote{' + json.dumps(e["textBefore"]) + ', ' + json.dumps(e["timeText"]) + ', ' + json.dumps(e["textAfterTime"]) + ', ' + json.dumps(e["author"]) + ', ' + json.dumps(e["title"]) + ', ' + e["timeHour"] + ', ' + e["timeMinute"] + ', '+ e["nsfw"] +'},\n'
 
-headerString += "}"
+headerString += "};"
 
 
 f = open("completeQuoteObject.h", "w", encoding="utf-8")
