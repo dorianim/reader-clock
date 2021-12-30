@@ -86,21 +86,31 @@ list = mergeSort(quoteList1, quoteList2)
 
 seen = []
 dupl = []
-for x in list:
+unique = []
+while list:
+    x = list.pop(0)
     if(len(seen) > 0):
-        seq = difflib.SequenceMatcher(a=str(seen[len(seen) - 1]), b=str(x))
-        print(x)
-        if seq.quick_ratio() > 0.9:
+        checkIndex = len(seen) - 1
+        seq = []
+        while checkIndex >= 0 and seen[checkIndex]["timeHour"] == x["timeHour"] and seen[checkIndex]["timeMinute"] == x["timeMinute"]:
+            if seen[checkIndex]["timeHour"] == "23" and seen[checkIndex]["timeMinute"] == "53": 
+                print(''.join(e for e in str(seen[len(seen) - 1]) if e.isalnum()))
+                print(''.join(e for e in str(x) if e.isalnum()))
+                print(x)
+                print('\n')
+            seq.append(difflib.SequenceMatcher(a=''.join(e for e in str(seen[checkIndex]) if e.isalnum()), b=''.join(e for e in str(x) if e.isalnum())).quick_ratio())
+            checkIndex -= 1
+        if any(seqValue > 0.9 for seqValue in seq): 
             dupl.append(x)
         else:
-            list.remove(x)
+            unique.append(x)
     seen.append(x) 
 
         
 
 
 f = open("AllQuotesWithoutDuplicates.json", "w", encoding="utf-8")
-f.write(json.dumps(list, indent=4))
+f.write(json.dumps(unique, indent=4))
 f.close()
 
 f = open("duplicates.json", "w", encoding="utf-8")
