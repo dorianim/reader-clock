@@ -2385,4 +2385,4 @@ Quote{"Humans emerge ", "one minute and seventeen seconds before midnight", ". T
 Quote{"At ", "a minute to midnight", ", Roquenton was holding his wife's hand and giving her some last words of advice. On the stroke of midnight, she felt her companion's hand melt away inside her own.", "Marcel Ayme", "Tickets on Time", 23, 59, false},
 Quote{"At ", "one minute to twelve", ", she was sure of it, and cursed herself for even thinking for a moment the cat-creature would help her escape.", "Garth Nix", "Clariel", 23, 59, false},
 Quote{"Chigurgh rose and picked up the empty casing off the rug and blew into it and put it in his pocket and looked at his watch. The ", "new day was still a minute away", ".", "Cormac McCarthy", "No Country for Old Men", 23, 59, false},
-}
+};

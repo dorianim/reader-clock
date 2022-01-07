@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 import json
 import re
-from types import NoneType
 from typing import Match
 
 headerString = "Quote QuoteDatas[] = {\n"
@@ -12,7 +11,7 @@ with open('AllQuotesWithoutDuplicates.json', encoding="utf-8") as f:
         filterList = ["A.M.", "P.M.", "No."]
         if len(e["textBefore"]) > 150:
             firstPoint = re.search(r'(?:(?<!A)(?<!P)(?<!No))\.', e["textBefore"])
-            if type(firstPoint) is not NoneType and firstPoint.start() < len(e["textBefore"]) - 10:
+            if firstPoint is not None and firstPoint.start() < len(e["textBefore"]) - 10:
                 e["textBefore"] = e["textBefore"][firstPoint.start() + 2:]
             else:
                 textArr = e["textBefore"].split(" ")
