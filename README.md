@@ -1,5 +1,14 @@
-# reader-clock
-A clone of the [Author clock](https://www.kickstarter.com/projects/1195310640/author-clock-a-novel-way-to-tell-time?ref=discovery&amp;term=author%20clock).
+<h1 align="center">
+  ReaderClock
+</h1>
+
+<p align="center">
+    <a href="https://www.gnu.org/licenses/agpl-3.0">
+    <img src="https://img.shields.io/badge/License-AGPL%20v3-blue.svg" />
+  </a>
+</p>
+
+Simply time - but different! 
 
 ### Disclaimer
 Huge thanks to these people for publishing their quotes:
