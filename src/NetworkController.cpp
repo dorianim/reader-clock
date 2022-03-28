@@ -4,6 +4,7 @@ NetworkController::NetworkController() {
     // Timeout immidiately. The code will work without network connection
     this->_config = new AutoConnectConfig();
     this->_config->portalTimeout = 1;
+    this->_config->beginTimeout = 1;
     this->_config->retainPortal = true;
     this->_config->apid = "Reader Clock";
     this->_config->psk = "R3aderC7ock";

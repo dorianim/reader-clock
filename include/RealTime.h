@@ -5,6 +5,7 @@
 #include "RTClib.h"
 #include "time.h"
 #include "NetworkController.h"
+#include <ezTime.h>
 
 class RealTime {
     public:
@@ -21,6 +22,7 @@ class RealTime {
         int _timezoneOffset;
         bool _hasValidTime;
         RTC_DS3231* _rtc;
+        Timezone* _timezone;
 
         bool _shouldSync();
         void _sync();

@@ -14,6 +14,7 @@ DisplayController::DisplayController(): _quoteFont{&FreeSerif12pt7b}, _boldFont{
 
     this->_display->init(115200, true, 2, false);
     this->_display->setTextWrap(false); // wrapping is done manually
+    this->_display->setRotation(90);
     Serial.println("Init done");
     //this->_display->fillScreen(GxEPD_WHITE);
     #ifdef USE_GXEPD2
