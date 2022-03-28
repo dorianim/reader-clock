@@ -6,6 +6,8 @@ RealTime::RealTime() :
 {
 
     this->_rtc = new RTC_DS3231();
+    this->_timezone = new Timezone();
+    this->_timezone->setLocation("Europe/Berlin");
 
     if (!this->_rtc->begin()) {
         Serial.println("Couldn't find RTC");
@@ -56,19 +58,18 @@ void RealTime::_sync() {
     if(!this->_shouldSync()) return;
 
     Serial.println("Starting timesync");
-    configTime(this->_timezoneOffset*60*60, 60*60*1000, "pool.ntp.org");
-    struct tm timeinfo;
-    if(!getLocalTime(&timeinfo)){
+
+    if(!waitForSync()){
         Serial.println("Timesync failed!");
     } 
     else {
         this->_rtc->adjust(DateTime(
-            timeinfo.tm_year, 
-            timeinfo.tm_mon, 
-            timeinfo.tm_mday, 
-            timeinfo.tm_hour, 
-            timeinfo.tm_min, 
-            timeinfo.tm_sec
+            this->_timezone->year(), 
+            this->_timezone->month(),
+            this->_timezone->dayOfYear(), 
+            this->_timezone->hour(), 
+            this->_timezone->minute(), 
+            this->_timezone->second()
             ));
         this->_hasValidTime = true;
         this->_lastSync = this->getTime();
