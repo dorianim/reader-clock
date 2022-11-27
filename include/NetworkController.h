@@ -3,10 +3,10 @@
 
 #include <WiFi.h>
 #include <WebServer.h>
-#include "AutoConnect.h"
 #include "FirmwareVersion.h"
 
-class NetworkController {
+class NetworkController
+{
 
 public:
     explicit NetworkController();
@@ -15,11 +15,9 @@ public:
     static bool connected();
 
 private:
-    WebServer* _server;
-    AutoConnect* _autoConnect;
-    AutoConnectConfig* _config;
+    WebServer *_server;
 
-    void _handleOnConnect(IPAddress& ipaddr);
+    void _handleOnConnect(IPAddress &ipaddr);
 };
 
 #endif
