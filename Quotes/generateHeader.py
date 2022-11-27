@@ -10,7 +10,8 @@ with open('AllQuotesWithoutDuplicates.json', encoding="utf-8") as f:
     for e in d:
         filterList = ["A.M.", "P.M.", "No."]
         if len(e["textBefore"]) > 150:
-            firstPoint = re.search(r'(?:(?<!A)(?<!P)(?<!No))\.', e["textBefore"])
+            firstPoint = re.search(
+                r'(?:(?<!A)(?<!P)(?<!No))\.', e["textBefore"])
             if firstPoint is not None and firstPoint.start() < len(e["textBefore"]) - 10:
                 e["textBefore"] = e["textBefore"][firstPoint.start() + 2:]
             else:
@@ -18,7 +19,8 @@ with open('AllQuotesWithoutDuplicates.json', encoding="utf-8") as f:
                 while len(' '.join(textArr)) > 150:
                     del textArr[0]
                 e["textBefore"] = "..." + ' '.join(textArr)
-        headerString += 'Quote{' + json.dumps(e["textBefore"]) + ', ' + json.dumps(e["timeText"]) + ', ' + json.dumps(e["textAfterTime"]) + ', ' + json.dumps(e["author"]) + ', ' + json.dumps(e["title"]) + ', ' + e["timeHour"] + ', ' + e["timeMinute"] + ', '+ e["nsfw"] +'},\n'
+        headerString += 'Quote{' + json.dumps(e["textBefore"]) + ', ' + json.dumps(e["timeText"]) + ', ' + json.dumps(e["textAfterTime"]) + ', ' + json.dumps(
+            e["author"]) + ', ' + json.dumps(e["title"]) + ', ' + e["timeHour"] + ', ' + e["timeMinute"] + ', ' + e["nsfw"] + '},\n'
 
 headerString += "};"
 
