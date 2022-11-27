@@ -232,7 +232,7 @@
     {
         "textBefore": "Once upon a ",
         "timeText": "midnight",
-        "textAfterTime": " dreary, while I pondered weak and weary, Over many a quaint and curious volume of forgotten lore, While I nodded, nearly napping, suddenly there came a tapping, As of some one gently rapping, rapping at my chamber door. `'Tis some visitor,' I muttered, `tapping at my chamber door - Only this, and nothing more.'",
+        "textAfterTime": " dreary, while I pondered weak and weary, Over many a quaint and curious volume of forgotten lore, While I nodded, nearly napping, suddenly there came a tapping, As of some one gently rapping, rapping at my chamber door. ''Tis some visitor,' I muttered, 'tapping at my chamber door - Only this, and nothing more.'",
         "author": "Edgar Allan Poe",
         "title": "The Raven ",
         "timeHour": "0",
@@ -13032,7 +13032,7 @@
     {
         "textBefore": "\"I think,\" he said, with a triumphant smile, \"that I may safely expect to find the person I seek in the dining-room, fair lady.\" \"There may be more than one.\" \"Whoever is there, as the ",
         "timeText": "clock strikes one",
-        "textAfterTime": ", will be shadowed by one of my men; of these, one, or perhaps two, or even three, will leave for France to-morrow. One of these will be the `Scarlet Pimpernel.'\"",
+        "textAfterTime": ", will be shadowed by one of my men; of these, one, or perhaps two, or even three, will leave for France to-morrow. One of these will be the 'Scarlet Pimpernel.'\"",
         "author": "Baroness Orczy",
         "title": "The Scarlet Pimpernel ",
         "timeHour": "13",
@@ -23792,7 +23792,7 @@
     {
         "textBefore": "\"I looked at my watch. It wanted ",
         "timeText": "five minutes to twelve",
-        "textAfterTime": ", when the premonitory symptoms of the working of the laudanum first showed themselves to me.\\nAt this time, no unpractised eyes would have detected any change in him. But, as the minutes of the new morning wore away, the swiftly-subtle progress of the influence began to show itself more plainly. The sublime intoxication of opium gleamed in his eyes; the dew of a stealthy perspiration began to glisten on his face. In five minutes more, the talk which he still kept up with me, failed in coherence.\"",
+        "textAfterTime": ", when the premonitory symptoms of the working of the laudanum first showed themselves to me.At this time, no unpractised eyes would have detected any change in him. But, as the minutes of the new morning wore away, the swiftly-subtle progress of the influence began to show itself more plainly. The sublime intoxication of opium gleamed in his eyes; the dew of a stealthy perspiration began to glisten on his face. In five minutes more, the talk which he still kept up with me, failed in coherence.\"",
         "author": "Wilkie Collins",
         "title": "The Moonstone ",
         "timeHour": "23",

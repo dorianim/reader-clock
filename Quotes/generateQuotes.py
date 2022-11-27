@@ -7,7 +7,7 @@ import difflib
 
 def sanityze(string):
     string = re.sub(r'("|“|”)+', '\"', string)
-    string = re.sub(r'(‘|’|′|´)+', "'", string)
+    string = re.sub(r'(‘|’|′|´|`)+', "'", string)
     string = re.sub(r'(ë|é|ê|è)+', "e", string)
     string = re.sub(r'(—|–|−)+', "-", string)
     string = re.sub('ö', "oe", string)
@@ -24,6 +24,7 @@ def sanityze(string):
     string = re.sub('£', "$", string)
     string = re.sub('č', "c", string)
     string = re.sub('ñ', "n", string)
+    string = string.replace('\\n', "")
     return string
 
 
