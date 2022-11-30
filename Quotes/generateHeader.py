@@ -22,19 +22,8 @@ def truncate_if_to_long(string: str, max_length: int) -> str:
     return "..." + ' '.join(textArr)
 
 
-def dump_as_structs(quotes: list) -> str:
-    headerString = "Quote QuoteDatas[] = {\n"
-    for quote in quotes:
-        quote["textBefore"] = truncate_if_to_long(quote["textBefore"], 150)
-
-        headerString += 'Quote{' + json.dumps(quote["textBefore"]) + ', ' + json.dumps(quote["timeText"]) + ', ' + json.dumps(quote["textAfterTime"]) + ', ' + json.dumps(
-            quote["author"]) + ', ' + json.dumps(quote["title"]) + ', ' + quote["timeHour"] + ', ' + quote["timeMinute"] + '},\n'
-
-    headerString += "};"
-    return headerString
-
-
 def quote_as_string(quote: dict) -> str:
+    quote["textBefore"] = truncate_if_to_long(quote["textBefore"], 150)
     combined_quote = []
     for key in ["textBefore", "timeText", "textAfterTime", "author", "title"]:
         combined_quote.append(quote[key])
