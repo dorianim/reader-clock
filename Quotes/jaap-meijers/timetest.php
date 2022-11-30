@@ -1,5 +1,7 @@
 <?php
 
+// This script was written by Jaap Meijers and publised on instructables.com
+// Source: https://content.instructables.com/FYR/7UYW/JK4UL3E8/FYR7UYWJK4UL3E8.zip
 
 // try to find all mentions of time in the literary quotes
 

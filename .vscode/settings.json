@@ -11,6 +11,18 @@
         "vector": "cpp",
         "ostream": "cpp",
         "functional": "cpp",
-        "sntp.h": "c"
+        "sntp.h": "c",
+        "random": "c",
+        "bitset": "c",
+        "cstring": "c",
+        "regex": "c",
+        "string_view": "c",
+        "fstream": "c",
+        "iomanip": "c",
+        "istream": "c",
+        "sstream": "c",
+        "stdexcept": "c",
+        "system_error": "c",
+        "typeinfo": "c"
     }
 }

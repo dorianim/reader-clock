@@ -47,8 +47,8 @@ void ReaderClock::_drawQuoteToDisplay() {
         Serial.printf("Current time: %d:%d\n", newHour, newMinute);
         this->_currentHour = newHour;
         this->_currentMinute = newMinute;
-        Quote* quoteToDisplay = this->_quotes->findQuoteMatchingTime(this->_currentHour, this->_currentMinute, 10);
-        this->_display->showQuote(quoteToDisplay);
+        Quote quoteToDisplay = this->_quotes->findQuoteMatchingTime(this->_currentHour, this->_currentMinute);
+        this->_display->showQuote(&quoteToDisplay);
     }
 }
 

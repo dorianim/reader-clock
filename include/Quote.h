@@ -7,40 +7,48 @@
 #include "stdlib.h"
 #include "string.h"
 #include "stdio.h"
+#include "stdint.h"
 #endif
 
-typedef struct Quote {
-    const char* textBeforeTime;
-    const char* timeText;
-    const char* textAfterTime;
-    const char* author;
-    const char* title;
+typedef struct Quote
+{
+    char textBeforeTime[1000];
+    char timeText[1000];
+    char textAfterTime[1000];
+    char author[1000];
+    char title[1000];
     uint8_t hour;
     uint8_t minute;
-    bool notSafeForWork;
 } quote_t;
 
-class QuoteList {
-    public:
-        explicit QuoteList(size_t initialSize = 0);
-        ~QuoteList();
+typedef struct HuffmanTree
+{
+    char c;
+    struct HuffmanTree *p;
+    struct HuffmanTree *l;
+    struct HuffmanTree *r;
+} huffman_tree_t;
 
-        static QuoteList* fromAllQuotes();
+class QuoteList
+{
+public:
+    ~QuoteList();
 
-        void append(Quote quote);
-        Quote* at(int index);
-        int length();
+    static QuoteList *fromAllQuotes();
 
-        // If no matching Quote is found, an older Quote is used
-        // It is up to accuracy minutes old
-        Quote* findQuoteMatchingTime(uint8_t hour, uint8_t minute, int accuracy);
-    private:
-        int _used;
-        int _size;
+    Quote findQuoteMatchingTime(uint8_t hour, uint8_t minute);
 
-        Quote* _array;
+private:
+    HuffmanTree* huffman_tree;
+    const uint8_t* hour_indexes[23];
 
-        Quote* _findQuoteMatchingTime(uint8_t hour, uint8_t minute, int accuracy);
+    explicit QuoteList();
+
+    Quote _findQuoteMatchingTime(uint8_t hour, uint8_t minute);
+
+    static HuffmanTree *build_tree(const uint8_t *raw_tree);
+    static char find_char(HuffmanTree* tree, const uint8_t encoded[], size_t *current_index);
+    void decode_quote(const uint8_t **encoded, Quote *buffer);
 };
 
 #endif // QUOTE_H
