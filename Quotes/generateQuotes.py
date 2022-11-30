@@ -42,12 +42,12 @@ def add_line(line):
     title = sanityze(quote[3])
 
     time = quote[0].split(":")
-    return {"textBefore": textBeforeTime, "timeText": timeText, "textAfterTime": textAfterTime, "author": author, "title": title, "timeHour": str(time[0]), "timeMinute": str(int(time[1])), "nsfw": "false"}
+    return {"textBefore": textBeforeTime, "timeText": timeText, "textAfterTime": textAfterTime, "author": author, "title": title, "timeHour": str(time[0]), "timeMinute": str(int(time[1]))}
 
 
 def insertCorrectTime(arr, index):
-    arr[index]["timeHour"] = str(int(arr[index]["timeHour"]))
-    arr[index]["timeMinute"] = str(int(arr[index]["timeMinute"]))
+    arr[index]["timeHour"] = int(arr[index]["timeHour"])
+    arr[index]["timeMinute"] = int(arr[index]["timeMinute"])
 
 
 def mergeSort(list1, list2):
