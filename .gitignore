@@ -6,3 +6,5 @@
 build
 .clang_complete
 .gcc-flags.json
+__pycache__
+a.out

@@ -121,7 +121,7 @@ def decode(encoded: list, tree: HuffmanTree) -> str:
 def byte_list_to_c(name: str, bytes: list) -> str:
 
     # remove last comma
-    headerString = "const uint8_t " + name + "[] = {\n  "
+    headerString = "const uint8_t " + name + "[] PROGMEM = {\n  "
     counter = 0
     for byte in bytes:
         headerString += "0x{:02x}, ".format(byte)
