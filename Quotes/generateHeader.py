@@ -48,7 +48,7 @@ def dump_as_huffman(quotes: list) -> str:
     print(
         f"Without compression: {len(combined_string)}, with compression: {len(encoded_quotes)} gain: {int((1 - len(encoded_quotes) / len(combined_string)) * 100)}%")
 
-    return huffman.byte_list_to_c("huffman_tree", huffman_tree.as_byte_list()) + "\n" + huffman.byte_list_to_c("raw_quotes", encoded_quotes)
+    return huffman.byte_list_to_c("quotes_huffman_tree", huffman_tree.as_byte_list()) + "\n" + huffman.byte_list_to_c("quotes_data", encoded_quotes)
 
 
 def encode_quote(quote: tuple, tree: huffman.HuffmanTree) -> list:
