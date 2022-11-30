@@ -7,3 +7,5 @@ The qoutes in this folder come from:
 - `jaap-meijers/timetest.php`: to find times in text
 - `generateQuotes.py`: merge and clean up the quotes.csv's from all sources
 - `generateHeader.py`: generate a c header file from `AllQuotesWithoutDuplicates.json`
+- `huffman.py`: hufman encoding stuff
+- `test.cpp`: to test if it works, compile with `g++ -g test.cpp -I ../include`
