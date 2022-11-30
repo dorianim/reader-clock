@@ -64,6 +64,6 @@ d = json.load(f)
 
 headerString = dump_as_huffman(d)
 
-f = open("completeQuoteObject.h", "w", encoding="utf-8")
+f = open("quotes.h", "w", encoding="utf-8")
 f.write(headerString)
 f.close()
