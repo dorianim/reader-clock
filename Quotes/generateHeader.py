@@ -1,29 +1,79 @@
 #!/usr/bin/python3
 import json
 import re
-from typing import Match
+import huffman
 
-headerString = "Quote QuoteDatas[] = {\n"
 
-with open('AllQuotesWithoutDuplicates.json', encoding="utf-8") as f:
-    d = json.load(f)
-    for e in d:
-        filterList = ["A.M.", "P.M.", "No."]
-        if len(e["textBefore"]) > 150:
-            firstPoint = re.search(
-                r'(?:(?<!A)(?<!P)(?<!No))\.', e["textBefore"])
-            if firstPoint is not None and firstPoint.start() < len(e["textBefore"]) - 10:
-                e["textBefore"] = e["textBefore"][firstPoint.start() + 2:]
-            else:
-                textArr = e["textBefore"].split(" ")
-                while len(' '.join(textArr)) > 150:
-                    del textArr[0]
-                e["textBefore"] = "..." + ' '.join(textArr)
-        headerString += 'Quote{' + json.dumps(e["textBefore"]) + ', ' + json.dumps(e["timeText"]) + ', ' + json.dumps(e["textAfterTime"]) + ', ' + json.dumps(
-            e["author"]) + ', ' + json.dumps(e["title"]) + ', ' + e["timeHour"] + ', ' + e["timeMinute"] + ', ' + e["nsfw"] + '},\n'
+def truncate_if_to_long(string: str, max_length: int) -> str:
+    if len(string) <= max_length:
+        return string
 
-headerString += "};"
+    firstPoint = re.search(
+        r'(?:(?<!A)(?<!P)(?<!No))\.', string)
 
+    if firstPoint is not None and firstPoint.start() < len(string) - 10:
+        return string[firstPoint.start() + 2:]
+
+    textArr = string.split(" ")
+
+    while len(' '.join(textArr)) > max_length:
+        del textArr[0]
+
+    return "..." + ' '.join(textArr)
+
+
+def dump_as_structs(quotes: list) -> str:
+    headerString = "Quote QuoteDatas[] = {\n"
+    for quote in quotes:
+        quote["textBefore"] = truncate_if_to_long(quote["textBefore"], 150)
+
+        headerString += 'Quote{' + json.dumps(quote["textBefore"]) + ', ' + json.dumps(quote["timeText"]) + ', ' + json.dumps(quote["textAfterTime"]) + ', ' + json.dumps(
+            quote["author"]) + ', ' + json.dumps(quote["title"]) + ', ' + quote["timeHour"] + ', ' + quote["timeMinute"] + '},\n'
+
+    headerString += "};"
+    return headerString
+
+
+def quote_as_string(quote: dict) -> str:
+    combined_quote = []
+    for key in ["textBefore", "timeText", "textAfterTime", "author", "title"]:
+        combined_quote.append(quote[key])
+    return ("\x02".join(combined_quote), quote["timeHour"], quote["timeMinute"])
+
+
+def dump_as_huffman(quotes: list) -> str:
+    quotes = list(map(quote_as_string, quotes))
+    combined_string = "".join(map(lambda x: x[0], quotes))
+    huffman_tree = huffman.HuffmanTree.from_string(combined_string + "\x01")
+    encoded_quotes = []
+
+    for quote in quotes:
+        encoded_quote = encode_quote(quote, huffman_tree)
+        # make sure we don't have a zero at the beginning, as that would indicate EOF
+        assert encoded_quote[0] != 0
+        encoded_quotes += encoded_quote
+
+    # add a null byte to indicate end of file
+    encoded_quotes += [0]
+
+    print(
+        f"Without compression: {len(combined_string)}, with compression: {len(encoded_quotes)} gain: {int((1 - len(encoded_quotes) / len(combined_string)) * 100)}%")
+
+    return huffman.byte_list_to_c("huffman_tree", huffman_tree.as_byte_list()) + "\n" + huffman.byte_list_to_c("raw_quotes", encoded_quotes)
+
+
+def encode_quote(quote: tuple, tree: huffman.HuffmanTree) -> list:
+    quote_string, hour, minute = quote
+
+    encoded, _ = huffman.encode(quote_string, tree)
+
+    return encoded + [hour, minute]
+
+
+f = open('AllQuotesWithoutDuplicates.json', encoding="utf-8")
+d = json.load(f)
+
+headerString = dump_as_huffman(d)
 
 f = open("completeQuoteObject.h", "w", encoding="utf-8")
 f.write(headerString)
