@@ -7,18 +7,18 @@
 #include "stdlib.h"
 #include "string.h"
 #include "stdio.h"
+#include "stdint.h"
 #endif
 
 typedef struct Quote
 {
-    char textBeforeTime[200];
-    char timeText[50];
-    char textAfterTime[500];
-    char author[50];
-    char title[50];
+    char textBeforeTime[1000];
+    char timeText[1000];
+    char textAfterTime[1000];
+    char author[1000];
+    char title[1000];
     uint8_t hour;
     uint8_t minute;
-    bool notSafeForWork;
 } quote_t;
 
 typedef struct HuffmanTree
@@ -40,6 +40,7 @@ public:
 
 private:
     HuffmanTree* huffman_tree;
+    const uint8_t* hour_indexes[23];
 
     explicit QuoteList();
 
