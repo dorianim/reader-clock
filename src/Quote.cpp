@@ -1,115 +1,183 @@
 #include "Quote.h"
-#include "../Quotes/completeQuoteObject.h"
-/*#ifdef ARDUINO
-Quote QuoteDatas[] PROGMEM = {
-#else
-Quote QuoteDatas[] = {
-#endif
-Quote{"Zeit: ", "00:00", " Ende.", "Oscar Wilde", "The Picture of Dorian Gray ", 0, 0, false},
-Quote{"Zeit: ", "00:01", " Ende.", "Oscar Wilde", "The Picture of Dorian Gray ", 0, 1, false},
-Quote{"Zeit: ", "00:10", " Ende.", "Oscar Wilde", "The Picture of Dorian Gray ", 0, 10, false},
-Quote{"Zeit: ", "00:30", " Ende.", "Oscar Wilde", "The Picture of Dorian Gray ", 0, 30, false},
-};*/
+#include "../Quotes/quotes.h"
 
-QuoteList::QuoteList(size_t initialSize) {
-    this->_array = (Quote*)malloc(initialSize * sizeof(Quote));
-    this->_used = 0;
-    this->_size = initialSize;
+QuoteList::QuoteList()
+{
+    this->huffman_tree = QuoteList::build_tree(quotes_huffman_tree);
+
+    // find indexes of all hours
+    Quote current_quote;
+    const uint8_t *current_index = quotes_data;
+    uint8_t last_hour = -1;
+    do {
+        const uint8_t *index = current_index;
+        this->decode_quote(&current_index, &current_quote);
+        if (current_quote.hour != last_hour) {
+            this->hour_indexes[current_quote.hour] = index;
+            last_hour = current_quote.hour;
+        }
+    } while (*current_index != 0);
 }
 
-QuoteList::~QuoteList() {
-  free(this->_array);
-  this->_array = NULL;
-  this->_used = this->_size = 0;
+QuoteList::~QuoteList()
+{
+    // TODO: free all HuffmanTree nodes
 }
 
-void QuoteList::append(Quote quote) {
-  // a->used is the number of used entries, because a->array[a->used++] updates a->used only *after* the array has been accessed.
-  // Therefore a->used can go up to a->size 
-  if (this->_used == this->_size) {
-    this->_size += sizeof(Quote);
-    this->_array = (Quote*)realloc(this->_array, this->_size * sizeof(Quote));
-  }
-  this->_array[this->_used++] = quote;
-}
-
-Quote* QuoteList::at(int index) {
-    if(index < this->length()) {
-        return &this->_array[index];
-    }
-    return nullptr;
-}
-
-int QuoteList::length() {
-    return this->_used;
-}
-
-QuoteList* QuoteList::fromAllQuotes() {
-    QuoteList* tmp = new QuoteList(sizeof(QuoteDatas) / sizeof(Quote));
-    tmp->_array = QuoteDatas;
-    tmp->_used = tmp->_size;
+QuoteList *QuoteList::fromAllQuotes()
+{
+    QuoteList *tmp = new QuoteList();
     return tmp;
 }
 
-Quote* QuoteList::findQuoteMatchingTime(uint8_t hour, uint8_t minute, int accuracy) {
-    Quote* result = this->_findQuoteMatchingTime(hour, minute, accuracy);
-    if(result == nullptr) {
-        char *timeString = new char[6];
-        sprintf(timeString, "%02d:%02d", hour, minute);
-        return new Quote{"No qoute found, the time is: ", timeString, "", "---", "---", hour, minute, false};
-    }
-    return result;
-}    
+Quote QuoteList::findQuoteMatchingTime(uint8_t hour, uint8_t minute)
+{
+    return this->_findQuoteMatchingTime(hour, minute);
+}
 
-Quote* QuoteList::_findQuoteMatchingTime(uint8_t hour, uint8_t minute, int accuracy) {
-    // find quote
-    #ifdef ARDUINO
-    Serial.printf("Trying to find quote for %d:%d\n", hour, minute);
-    #else
-    printf("Trying to find quote for %d:%d\n", hour, minute);
-    #endif
-    
+Quote QuoteList::_findQuoteMatchingTime(uint8_t hour, uint8_t minute)
+{
+    Quote current_quote;
+
     int matchingQuoteCount = 0;
+    const uint8_t *first_matching_index = nullptr;
+    const uint8_t *current_index = this->hour_indexes[hour];
 
-    for (int i = 0; i < this->length(); i++) {
-        Quote* thisQuote = this->at(i);
-        if(thisQuote->hour == hour && thisQuote->minute == minute) {
-            matchingQuoteCount ++;
+    do
+    {
+        const uint8_t *index = current_index;
+        this->decode_quote(&current_index, &current_quote);
+
+        if (current_quote.hour == hour && current_quote.minute == minute)
+        {
+            if (first_matching_index == nullptr)
+                first_matching_index = index;
+            matchingQuoteCount++;
         }
-    }
+    } while (*current_index != 0 && current_quote.hour == hour);
 
-    if(matchingQuoteCount == 0 && accuracy > 0) {
-        printf("No qoute found, trying older...\n");
-        return this->_findQuoteMatchingTime(hour, minute-1, accuracy-1);
-    }
-    else if(matchingQuoteCount == 0 && accuracy == 0) {
-        #ifdef ARDUINO
-        Serial.println("No qoute found.");
-        #else
-        printf("No qoute found.\n");
-        #endif
-        return nullptr;
-    }
+    if (matchingQuoteCount == 0)
+    {
+        strcpy(current_quote.textBeforeTime, "It is ");
+        sprintf(current_quote.timeText, "%02d:%02d", hour, minute);
+        strcpy(current_quote.textAfterTime, "");
+        strcpy(current_quote.author, "no quote found");
+        strcpy(current_quote.title, "");
+        current_quote.hour = hour;
+        current_quote.minute = minute;
 
-    #ifdef ARDUINO
-    int chosenQuoteNumber = random(1, matchingQuoteCount);
-    #else
-    int chosenQuoteNumber = 1;
-    #endif
-
-    Quote* result = nullptr;
-    for (int i = 0; i < this->length() && chosenQuoteNumber > 0; i++) {
-        result = this->at(i);
-        if(result->hour == hour && result->minute == minute) {
-            chosenQuoteNumber --;
-        }
+        return current_quote;
     }
 
 #ifdef ARDUINO
-    Serial.printf("Selected quote: %s%s%s\n", result->textBeforeTime, result->timeText, result->textAfterTime);
+    int chosenQuoteNumber = random(1, matchingQuoteCount);
 #else
-    printf("Selected quote: %s%s%s\n", result->textBeforeTime, result->timeText, result->textAfterTime);
+    int chosenQuoteNumber = 1;
 #endif
 
-    return result;
+    for (; chosenQuoteNumber > 0; chosenQuoteNumber--)
+    {
+        // we assert that the quotes are sorted
+        this->decode_quote(&first_matching_index, &current_quote);
+    }
+
+    return current_quote;
+}
+
+//
+// Huffman helpers
+//
+HuffmanTree *QuoteList::build_tree(const uint8_t *raw_tree)
+{
+    HuffmanTree *root = NULL;
+    HuffmanTree *last_node = NULL;
+
+    int children_missing = 0;
+    do
+    {
+        HuffmanTree *current_node = (HuffmanTree *)malloc(sizeof(HuffmanTree));
+
+        current_node->p = last_node;
+        current_node->c = *raw_tree;
+        raw_tree++;
+
+        if (current_node->c == 0)
+        {
+            children_missing += 2;
+            last_node = current_node;
+        }
+
+        if (root == NULL)
+        {
+            root = current_node;
+            continue;
+        }
+
+        if (current_node->p->l == NULL)
+        {
+            current_node->p->l = current_node;
+        }
+        else
+        {
+            current_node->p->r = current_node;
+        }
+        children_missing--;
+
+        while (last_node != NULL && last_node->r != NULL)
+        {
+            last_node = last_node->p;
+        }
+    } while (children_missing > 0);
+
+    return root;
+}
+
+// decodes encoded into buffer
+void QuoteList::decode_quote(const uint8_t **encoded, Quote *buffer)
+{
+    size_t current_length = 1;
+    size_t current_index = 0;
+    char *buffers[] = {buffer->textBeforeTime, buffer->timeText, buffer->textAfterTime, buffer->author, buffer->title};
+    char **current_buffer = buffers;
+    for (;;)
+    {
+        char c = find_char(this->huffman_tree, *encoded, &current_index);
+
+        if (c == 1)
+        {
+            (*current_buffer)[current_length - 1] = 0;
+            break;
+        }
+        else if (c == 2)
+        {
+            (*current_buffer)[current_length - 1] = 0;
+            current_buffer++;
+            current_length = 0;
+        }
+
+        (*current_buffer)[current_length - 1] = c;
+        current_length++;
+    }
+    (*encoded) = *encoded + (current_index / 8 + (current_index % 8 == 0 ? 0 : 1));
+
+    buffer->hour = **encoded;
+    (*encoded)++;
+    buffer->minute = **encoded;
+    (*encoded)++;
+}
+
+char QuoteList::find_char(HuffmanTree *tree, const uint8_t encoded[], size_t *current_index)
+{
+    if (tree->c != 0)
+        return tree->c;
+
+    uint8_t current_bit = (encoded[*current_index / 8] >> (7 - (*current_index % 8))) & 1;
+    (*current_index)++;
+
+    if (current_bit == 1)
+        tree = tree->l;
+    else
+        tree = tree->r;
+
+    return find_char(tree, encoded, current_index);
 }
