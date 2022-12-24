@@ -89,8 +89,8 @@ Quote QuoteList::_findQuoteMatchingTime(uint8_t hour, uint8_t minute)
 //
 HuffmanTree *QuoteList::build_tree(const uint8_t *raw_tree)
 {
-    HuffmanTree *root = NULL;
-    HuffmanTree *last_node = NULL;
+    HuffmanTree *root = nullptr;
+    HuffmanTree *last_node = nullptr;
 
     int children_missing = 0;
     do
@@ -98,6 +98,8 @@ HuffmanTree *QuoteList::build_tree(const uint8_t *raw_tree)
         HuffmanTree *current_node = (HuffmanTree *)malloc(sizeof(HuffmanTree));
 
         current_node->p = last_node;
+        current_node->l = nullptr;
+        current_node->r = nullptr;
         current_node->c = *raw_tree;
         raw_tree++;
 
@@ -107,13 +109,13 @@ HuffmanTree *QuoteList::build_tree(const uint8_t *raw_tree)
             last_node = current_node;
         }
 
-        if (root == NULL)
+        if (root == nullptr)
         {
             root = current_node;
             continue;
         }
 
-        if (current_node->p->l == NULL)
+        if (current_node->p->l == nullptr)
         {
             current_node->p->l = current_node;
         }
@@ -123,7 +125,7 @@ HuffmanTree *QuoteList::build_tree(const uint8_t *raw_tree)
         }
         children_missing--;
 
-        while (last_node != NULL && last_node->r != NULL)
+        while (last_node != nullptr && last_node->r != nullptr)
         {
             last_node = last_node->p;
         }
