@@ -18,12 +18,11 @@ class RealTime {
         bool hasValidTime();
 
     private:
-        long _lastSync;
-        int _timezoneOffset;
-        bool _hasValidTime;
+        bool _rtcOnline;
         RTC_DS3231* _rtc;
         Timezone* _timezone;
 
+        void _init();
         bool _shouldSync();
         void _sync();
 

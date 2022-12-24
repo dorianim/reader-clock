@@ -1,25 +1,40 @@
 #include "RealTime.h"
 
-RealTime::RealTime() : 
-    _lastSync(-1),
-    _timezoneOffset(1) 
+RealTime::RealTime()
 {
 
     this->_rtc = new RTC_DS3231();
     this->_timezone = new Timezone();
     this->_timezone->setLocation("Europe/Berlin");
 
+    this->_init();
+}
+
+void RealTime::_init() {
     if (!this->_rtc->begin()) {
-        Serial.println("Couldn't find RTC");
+        Serial.println("[W] RTC offline");
+        this->_rtcOnline = false;
+        return;
     }
 
+    Serial.println("[I] RTC online");
+    this->_rtcOnline = true;
+
     if (this->_rtc->lostPower()) {
-        Serial.println("RTC lost power, we don't have a valid time!");
-        this->_hasValidTime = false;
+        Serial.println("[W] RTC lost power, we don't have a valid time");
+        return;
     }
-    else {
-        this->_hasValidTime = true;
-    }
+
+    Serial.println("[I] RTC has valid time");
+    DateTime now = this->_rtc->now();
+    this->_timezone->setTime(
+        now.hour(),
+        now.minute(),
+        now.second(),
+        now.day(),
+        now.month(),
+        now.year()
+    );
 }
 
 void RealTime::loop() {
@@ -27,30 +42,23 @@ void RealTime::loop() {
 }
 
 int RealTime::getHour() {
-    DateTime now = this->_rtc->now();
-    return now.hour();
+    return this->_timezone->hour();
 }
 
 int RealTime::getMinute() {
-    DateTime now = this->_rtc->now();
-    return now.minute();
+    return this->_timezone->minute();
 }
 
 long RealTime::getTime() {
-    DateTime now = this->_rtc->now();
-    return now.unixtime();
+    return this->_timezone->tzTime();
 }
 
 bool RealTime::hasValidTime() {
-    return this->_hasValidTime;
+    return timeStatus() != timeStatus_t::timeNotSet;
 }
 
 bool RealTime::_shouldSync() {
-    return (
-            !this->hasValidTime() || 
-            this->_lastSync < 0 || 
-            this->getTime() - this->_lastSync > 60 * 60
-        ) 
+    return timeStatus() == timeStatus_t::timeNeedsSync
         && NetworkController::connected();
 }
 
@@ -61,7 +69,7 @@ void RealTime::_sync() {
 
     if(!waitForSync()){
         Serial.println("Timesync failed!");
-    } 
+    }
     else {
         this->_rtc->adjust(DateTime(
             this->_timezone->year(), 
@@ -71,8 +79,6 @@ void RealTime::_sync() {
             this->_timezone->minute(), 
             this->_timezone->second()
             ));
-        this->_hasValidTime = true;
-        this->_lastSync = this->getTime();
         Serial.println("Timesync successfull!");
         Serial.printf("The time is now: %d:%d\n", this->getHour(), this->getMinute());
     }
