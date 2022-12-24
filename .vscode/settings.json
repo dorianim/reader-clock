@@ -23,6 +23,9 @@
         "sstream": "c",
         "stdexcept": "c",
         "system_error": "c",
-        "typeinfo": "c"
+        "typeinfo": "c",
+        "chrono": "cpp",
+        "ctime": "cpp",
+        "thread": "cpp"
     }
 }
