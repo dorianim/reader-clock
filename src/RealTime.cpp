@@ -37,8 +37,10 @@ void RealTime::_init() {
     );
 }
 
-void RealTime::loop() {
-    this->_sync();
+void RealTime::run() {
+    for(;;) {
+        this->_sync();
+    }
 }
 
 int RealTime::getHour() {

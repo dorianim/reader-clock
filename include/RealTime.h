@@ -5,17 +5,20 @@
 #include "RTClib.h"
 #include "time.h"
 #include "NetworkController.h"
+#include "Task.h"
 #include <ezTime.h>
 
-class RealTime {
+class RealTime: Task {
     public:
         explicit RealTime();
-        void loop();
         int getHour();
         int getMinute();
         long getTime();
 
         bool hasValidTime();
+
+    protected:
+        void run() override;
 
     private:
         bool _rtcOnline;

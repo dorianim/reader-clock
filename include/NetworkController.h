@@ -4,15 +4,18 @@
 #include <WiFi.h>
 #include <WebServer.h>
 #include "FirmwareVersion.h"
+#include "Task.h"
 
-class NetworkController
+class NetworkController: Task
 {
 
 public:
     explicit NetworkController();
 
-    void loop();
     static bool connected();
+
+protected:
+    void run() override;
 
 private:
     WebServer *_server;

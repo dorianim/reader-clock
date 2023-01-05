@@ -2,14 +2,16 @@
 
 NetworkController::NetworkController()
 {
+    WiFi.softAP("TestAP","12345678");
     this->_server = new WebServer();
 
     this->_server->on("/", [this]()
                       { this->_server->send(200, "text/json", "{ \"message\": \"Hello, World!\" }"); });
 }
 
-void NetworkController::loop()
+void NetworkController::run()
 {
+    for(;;)
     this->_server->handleClient();
 }
 
