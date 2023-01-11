@@ -3,16 +3,21 @@ import json
 import re
 import huffman
 
+def truncate_quotes(quotes: list):
+    for quote in quotes:
+        quote["textBefore"] = truncate_start(quote["textBefore"], 150)
+        quote["textAfterTime"] = truncate_end(quote["textAfterTime"], 200)
 
-def truncate_if_to_long(string: str, max_length: int) -> str:
+
+def truncate_start(string: str, max_length: int) -> str:
     if len(string) <= max_length:
         return string
 
-    firstPoint = re.search(
-        r'(?:(?<!A)(?<!P)(?<!No))\.', string)
+    firstPointInRange = re.search(
+        '(?:(?<!A)(?<!P)(?<!No))\. .{0,' + str(max_length) + '}$', string)
 
-    if firstPoint is not None and firstPoint.start() < len(string) - 10:
-        return string[firstPoint.start() + 2:]
+    if firstPointInRange is not None and firstPointInRange.start() < len(string) - 50:
+        return string[firstPointInRange.start() + 2:]
 
     textArr = string.split(" ")
 
@@ -21,9 +26,23 @@ def truncate_if_to_long(string: str, max_length: int) -> str:
 
     return "..." + ' '.join(textArr)
 
+def truncate_end(string: str, max_length: int) -> str:
+    if len(string) <= max_length:
+        return string
+
+    lastPointInRange = re.search('^.{0,'+ str(max_length) +'}(?:(?<!A)(?<!P)(?<!No))\. ', string)
+
+    if lastPointInRange is not None and lastPointInRange.end() > 100:
+        return string[:lastPointInRange.end()-1]
+
+    textArr = string.split(" ")
+
+    while len(' '.join(textArr)) > max_length:
+        del textArr[-1]
+
+    return ' '.join(textArr) + "..."
 
 def quote_as_string(quote: dict) -> str:
-
     combined_quote = []
     for key in ["textBefore", "timeText", "textAfterTime", "author", "title"]:
         combined_quote.append(quote[key])
@@ -48,8 +67,7 @@ def quote_max_lengths(quotes: list) -> dict:
 
 
 def dump_as_huffman(quotes: list) -> str:
-    for quote in quotes:
-        quote["textBefore"] = truncate_if_to_long(quote["textBefore"], 150)
+    truncate_quotes(quotes)
 
     quote_lengths = quote_max_lengths(quotes)
     quotes = list(map(quote_as_string, quotes))
