@@ -4,7 +4,13 @@
 
 void _runTask(void *ptr) {
   Task *task = (Task *)ptr;
-  task->run();
+  task->setup();
+
+  for (;;) {
+    vTaskDelay(10);
+    task->loop();
+  }
+
   vTaskDelete(NULL);
 }
 

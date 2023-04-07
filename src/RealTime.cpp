@@ -34,11 +34,9 @@ void RealTime::_init() {
                            now.month(), now.year());
 }
 
-void RealTime::run() {
-  for (;;) {
-    ezt::events();
-  }
-}
+void RealTime::setup() {}
+
+void RealTime::loop() { ezt::events(); }
 
 int RealTime::getHour() { return this->_timezone->hour(); }
 

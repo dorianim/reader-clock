@@ -7,7 +7,8 @@ class Task {
 protected:
   Task(const char *name);
   virtual ~Task();
-  virtual void run() = 0;
+  virtual void setup() = 0;
+  virtual void loop() = 0;
   friend void _runTask(void *task);
 };
 

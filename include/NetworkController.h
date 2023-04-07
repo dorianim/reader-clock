@@ -13,7 +13,8 @@ public:
   static bool connected();
 
 protected:
-  void run() override;
+  void setup() override;
+  void loop() override;
 
 private:
   WiFiManager _wifiManager;

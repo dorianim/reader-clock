@@ -6,14 +6,15 @@ NetworkController::NetworkController() : Task("NetworkController") {
   this->_wifiManager.setHostname(this->_id.c_str());
 }
 
-void NetworkController::run() {
+void NetworkController::setup() {
   this->_wifiManager.autoConnect(this->_id.c_str());
-  for (;;) {
-    if (!this->_wifiManager.getWebPortalActive()) {
-      this->_wifiManager.startWebPortal();
-    } else {
-      this->_wifiManager.process();
-    }
+}
+
+void NetworkController::loop() {
+  if (!this->_wifiManager.getWebPortalActive()) {
+    this->_wifiManager.startWebPortal();
+  } else {
+    this->_wifiManager.process();
   }
 }
 

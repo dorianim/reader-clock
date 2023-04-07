@@ -19,7 +19,8 @@ public:
   bool hasValidTime();
 
 protected:
-  void run() override;
+  void setup() override;
+  void loop() override;
 
 private:
   bool _rtcOnline;
