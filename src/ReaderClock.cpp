@@ -53,6 +53,14 @@ void ReaderClock::_drawQuoteToDisplay() {
 void ReaderClock::_drawTimeErrorToDisplay() {
   if (this->_state != NoValidTime || this->_oldState == NoValidTime)
     return;
-  this->_display->showWarning("No valid time set! Please connect to a wifi "
-                              "network in order to sync the time.");
+
+  if (NetworkController::connected()) {
+
+    this->_display->showWarning("Wifi connected! "
+                                "Trying to get time, pease wait...");
+  } else {
+
+    this->_display->showWarning("No valid time set! Please connect to a wifi "
+                                "network in order to sync the time.");
+  }
 }
