@@ -5,10 +5,10 @@
 
 class Task {
 protected:
-    Task();
-    virtual ~Task();
-    virtual void run() = 0;
-    friend void _runTask(void* task);
+  Task(const char *name);
+  virtual ~Task();
+  virtual void run() = 0;
+  friend void _runTask(void *task);
 };
 
 #endif // TASK_H
