@@ -12,8 +12,6 @@ ReaderClock::ReaderClock() : _state(Initing), _oldState(Initing) {
 
 void ReaderClock::loop() {
     this->_updateDisplay();
-    this->_networkController->loop();
-    this->_time->loop();
 }
 
 void ReaderClock::_updateDisplay() {

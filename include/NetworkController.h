@@ -1,25 +1,26 @@
 #ifndef NETWORK_CONTROLLER_H
 #define NETWORK_CONTROLLER_H
 
-#include <WiFi.h>
-#include <WebServer.h>
-#include "AutoConnect.h"
 #include "FirmwareVersion.h"
+#include "Task.h"
+#include <WiFiManager.h>
 
-class NetworkController {
+class NetworkController : Task {
 
 public:
-    explicit NetworkController();
+  explicit NetworkController();
 
-    void loop();
-    static bool connected();
+  static bool connected();
+
+protected:
+  void run() override;
 
 private:
-    WebServer* _server;
-    AutoConnect* _autoConnect;
-    AutoConnectConfig* _config;
+  WiFiManager _wifiManager;
+  String _id;
 
-    void _handleOnConnect(IPAddress& ipaddr);
+  void _handleOnConnect(IPAddress &ipaddr);
+  String _generateId();
 };
 
 #endif
