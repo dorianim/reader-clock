@@ -1,7 +1,6 @@
 #include "RealTime.h"
 
 RealTime::RealTime() : Task("RealTime") {
-
   this->_rtc = new RTC_DS3231();
   this->_timezone = new Timezone();
   this->_timezone->setPosix("CET-1CEST,M3.5.0,M10.5.0/3");
@@ -11,6 +10,7 @@ RealTime::RealTime() : Task("RealTime") {
   ezt::setNtpUpdateHandler(RealTime::_ntpUdateHandler, this);
 
   this->_init();
+  this->_constructorDone = true;
 }
 
 void RealTime::_init() {
@@ -45,7 +45,7 @@ int RealTime::getMinute() { return this->_timezone->minute(); }
 long RealTime::getTime() { return this->_timezone->tzTime(); }
 
 bool RealTime::hasValidTime() {
-  return ezt::timeStatus() == timeStatus_t::timeSet;
+  return ezt::timeStatus() != timeStatus_t::timeNotSet;
 }
 
 void RealTime::_handleNtpUpdate() {

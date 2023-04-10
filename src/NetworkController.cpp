@@ -4,6 +4,7 @@ NetworkController::NetworkController() : Task("NetworkController") {
   this->_wifiManager.setTitle("ReaderClock");
   this->_id = "ReaderClock-" + this->_generateId();
   this->_wifiManager.setHostname(this->_id.c_str());
+  this->_constructorDone = true;
 }
 
 void NetworkController::setup() {

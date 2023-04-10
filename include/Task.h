@@ -9,7 +9,11 @@ protected:
   virtual ~Task();
   virtual void setup() = 0;
   virtual void loop() = 0;
-  friend void _runTask(void *task);
+
+  bool _constructorDone;
+
+private:
+  static void _runTask(void *task);
 };
 
 #endif // TASK_H
