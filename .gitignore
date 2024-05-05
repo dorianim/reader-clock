@@ -8,3 +8,4 @@ build
 .gcc-flags.json
 __pycache__
 a.out
+web/dist

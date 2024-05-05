@@ -23,6 +23,9 @@ Huge thanks to these people for publishing their quotes:
 - [GxEPD2](https://github.com/ZinggJM/GxEPD2) (Stripped down to save some storage capacity)
 - [RTClib](https://github.com/adafruit/RTClib)
 - [ezTime](https://github.com/ropg/ezTime) (Stripped down with minor adjustments)
+- [moment.js]()
+- [moment-timezone.js]()
+- [posix-timezone](https://github.com/moment/moment-timezone/issues/314#issuecomment-198226333)
 
 ### Used hardware
 

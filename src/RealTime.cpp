@@ -1,64 +1,83 @@
 #include "RealTime.h"
 
-RealTime::RealTime() : Task("RealTime") {
+RealTime::RealTime() : _state(Unavailable)
+{
   this->_rtc = new RTC_DS3231();
-  this->_timezone = new Timezone();
-  this->_timezone->setPosix("CET-1CEST,M3.5.0,M10.5.0/3");
-  ezt::setDebug(INFO);
-  uint16_t ntpInterval = 60U * 60U * 2U;
-  ezt::setInterval(ntpInterval);
-  ezt::setNtpUpdateHandler(RealTime::_ntpUdateHandler, this);
 
   this->_init();
-  this->_constructorDone = true;
 }
 
-void RealTime::_init() {
-  if (!this->_rtc->begin()) {
-    Serial.println("[W] RTC offline");
-    this->_rtcOnline = false;
+void RealTime::_init()
+{
+  if (!this->_rtc->begin())
+  {
+    Serial.println("[ERROR] RTC offline");
+    _state = Unavailable;
+    this->_setTime(0, false);
     return;
   }
 
   Serial.println("[I] RTC online");
-  this->_rtcOnline = true;
+  _state = Available;
 
-  if (this->_rtc->lostPower()) {
+  _state = Available;
+  DateTime now = this->_rtc->now();
+
+  if (this->_rtc->lostPower() || now.year() < 2024)
+  {
     Serial.println("[W] RTC lost power, we don't have a valid time");
+    _state = NeedsUpdate;
+    this->_setTime(0, false);
     return;
   }
 
-  Serial.println("[I] RTC has valid time");
-  DateTime now = this->_rtc->now();
-  this->_timezone->setTime(now.hour(), now.minute(), now.second(), now.day(),
-                           now.month(), now.year());
+  Serial.printf("[I] RTC has valid time: %d-%d-%d %d:%d:%d\n", now.year(), now.month(), now.day(), now.hour(), now.minute(), now.second());
+  this->_setTime(now.unixtime(), true);
 }
 
-void RealTime::setup() {}
-
-void RealTime::loop() { ezt::events(); }
-
-int RealTime::getHour() { return this->_timezone->hour(); }
-
-int RealTime::getMinute() { return this->_timezone->minute(); }
-
-long RealTime::getTime() { return this->_timezone->tzTime(); }
-
-bool RealTime::hasValidTime() {
-  return ezt::timeStatus() != timeStatus_t::timeNotSet;
+int RealTime::getHour()
+{
+  return getTime()->tm_hour;
 }
 
-void RealTime::_handleNtpUpdate() {
-  this->_rtc->adjust(
-      DateTime(this->_timezone->year(), this->_timezone->month(),
-               this->_timezone->dayOfYear(), this->_timezone->hour(),
-               this->_timezone->minute(), this->_timezone->second()));
-  Serial.println("[I] Timesync successfull!");
-  Serial.printf("[I] The time is now: %d:%d\n", this->getHour(),
-                this->getMinute());
+int RealTime::getMinute() { return getTime()->tm_min; }
+
+int RealTime::getSecond() { return getTime()->tm_sec; }
+
+tm *RealTime::getTime()
+{
+  timeval tv;
+  gettimeofday(&tv, nullptr);
+  return localtime(&tv.tv_sec);
 }
 
-void RealTime::_ntpUdateHandler(void *args) {
-  RealTime *that = (RealTime *)args;
-  that->_handleNtpUpdate();
+void RealTime::setTime(time_t time)
+{
+  this->_setTime(time, true);
+}
+
+void RealTime::setTimezone(String timezone)
+{
+  setenv("TZ", timezone.c_str(), 1);
+  tzset();
+}
+
+void RealTime::_setTime(time_t time, bool isValid)
+{
+  timeval tv = {
+      .tv_sec = time,
+      .tv_usec = 0,
+  };
+  settimeofday(&tv, nullptr);
+
+  if (isValid)
+  {
+    this->_rtc->adjust(DateTime(time));
+    this->_state = Available;
+  }
+}
+
+RealTime::RealTimeState RealTime::state()
+{
+  return _state;
 }

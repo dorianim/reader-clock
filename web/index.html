@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+
+    <link rel="stylesheet" href="pico.css">
+
+    <script src="moment.min.js"></script>
+    <script src="moment-timezone.min.js"></script>
+    <script src="posix-timezone.min.js"></script>
+
+    <title>ReaderClock</title>
+</head>
+
+<body>
+    <main>
+        <h1>ReaderClock</h1>
+        <p>Welcome to your ReaderClock! Here you can change some settings.</p>
+
+        <h2>Date and Time</h2>
+        <p>Here you can update the time and Date of your ReaderClock to match the clock of your device:</p>
+
+        <form action="/form/datetime" method="post" enctype='multipart/form-data'>
+            <hgroup>
+                <h4 id="datetime"></h4>
+                <p id="iana-timezone"></p>
+            </hgroup>
+            <details id="form-details">
+                <summary>Advanced options</summary>
+                <label for="timestamp">UNIX Timestamp:</label>
+                <input type="number" min="0" id="timestamp" name="timestamp" value="0">
+                <label for="timezone">POSIX Timezone:</label>
+                <input type="text" id="posix-timezone" name="timezone" value="UTC">
+            </details>
+            <button type="submit">Update Date and Time!</button>
+        </form>
+    </main>
+
+    <script>
+        function autofillFormWithCurrentDateTime() {
+            if (!moment || !moment.tz || !getPosixStringForCurrentYear) {
+                document.getElementById('datetime').textContent = 'Error: JavaScript libraries not loaded';
+                return;
+            }
+
+            const now = new Date();
+            document.getElementById('datetime').textContent = now.toLocaleString();
+
+            const ianaTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            document.getElementById('iana-timezone').textContent = ianaTimezone;
+            const posixTimezone = getPosixStringForCurrentYear(ianaTimezone);
+
+            if (!document.getElementById('form-details').open) {
+                document.getElementById('timestamp').value = parseInt(now.getTime() / 1000);
+                document.getElementById('posix-timezone').value = posixTimezone;
+            }
+
+            const timeUntilNextSecond = 1000 - now.getMilliseconds();
+            setTimeout(autofillFormWithCurrentDateTime, timeUntilNextSecond);
+        }
+
+        document.addEventListener('DOMContentLoaded', autofillFormWithCurrentDateTime);
+    </script>
+</body>
+
+</html>

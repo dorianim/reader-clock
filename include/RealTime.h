@@ -2,33 +2,36 @@
 #define REAL_TIME_H
 
 #include "Arduino.h"
-#include "NetworkController.h"
 #include "RTClib.h"
-#include "Task.h"
 #include "time.h"
-#undef EZTIME_CACHE_EEPROM
-#include <ezTime.h>
 
-class RealTime : Task {
+class RealTime
+{
 public:
+  enum RealTimeState
+  {
+    Unavailable,
+    NeedsUpdate,
+    Available
+  };
+
   explicit RealTime();
+  tm *getTime();
   int getHour();
   int getMinute();
-  long getTime();
+  int getSecond();
 
-  bool hasValidTime();
-
-protected:
-  void setup() override;
-  void loop() override;
+  void setTime(time_t time);
+  void setTimezone(String timezone);
+  RealTimeState state();
 
 private:
-  bool _rtcOnline;
+  RealTimeState _state;
   RTC_DS3231 *_rtc;
-  Timezone *_timezone;
 
   void _init();
   void _handleNtpUpdate();
+  void _setTime(time_t time, bool isValid);
 
   static void _ntpUdateHandler(void *args);
 };
