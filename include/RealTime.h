@@ -22,7 +22,7 @@ public:
   int getSecond();
 
   void setTime(time_t time);
-  void setTimezone(String timezone);
+  bool setTimezone(String timezone);
   RealTimeState state();
 
 private:
@@ -32,6 +32,7 @@ private:
   void _init();
   void _handleNtpUpdate();
   void _setTime(time_t time, bool isValid);
+  bool _setTimezone(String timezone, bool store);
 
   static void _ntpUdateHandler(void *args);
 };

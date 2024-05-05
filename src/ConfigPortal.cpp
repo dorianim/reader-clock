@@ -58,12 +58,16 @@ void ConfigPortal::_redirectToRoot()
 
 void ConfigPortal::_handleFormDatetime()
 {
-  this->_time->setTimezone(this->_webServer->arg("timezone"));
+  bool ret = this->_time->setTimezone(this->_webServer->arg("timezone"));
   // TODO: is this safe?
   unsigned long timestamp = strtol(this->_webServer->arg("timestamp").c_str(), NULL, 10);
   this->_time->setTime(timestamp);
 
-  this->_webServer->sendHeader("Location", "http://192.168.4.1/#form-datetime-result=success");
+  if (ret)
+    this->_webServer->sendHeader("Location", "http://192.168.4.1/#form-datetime-result=success");
+  else
+    this->_webServer->sendHeader("Location", "http://192.168.4.1/#form-datetime-result=failure");
+
   this->_webServer->send(302, "text/plain", "");
 }
 
@@ -142,7 +146,10 @@ void ConfigPortal::start()
           this->_updateFinishedAt = millis();
         }
       },
-      []() {});
+      [this]()
+      {
+        this->_handleFormUpdate();
+      });
 
   this->_webServer->on("/api/version", HTTP_GET, [this]()
                        { this->_webServer->send(200, "application/json", "{\"version\": \"" FIRMWARE_VERSION "\"}"); });

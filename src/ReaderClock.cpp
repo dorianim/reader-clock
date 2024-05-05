@@ -109,13 +109,11 @@ void ReaderClock::_startConfigPortalIfNecessary()
 void ReaderClock::_goToSleepIfNecessary()
 {
   // Rules:
-  // - If there is an RTC Error, go to sleep
-  // - If there is no valid timer after AWAKE_SECONDS_AFTER_FIRST_BOOT, go to sleep
-  // - If we are showing quotes
-  //   - If it is the first boot, go to slep after AWAKE_SECONDS_AFTER_FIRST_BOOT and wake up in time for the next minute
-  //   - If it is not the first boot, go to sleep and wake up in time for the next minute
+  // - If it is the first boot, go to slep after AWAKE_SECONDS_AFTER_FIRST_BOOT
+  // - wake up in time for the next minute if we are shwoing quotes
+  // - If it is not the first boot, go to sleep and wake up in time for the next minute
 
-  if (this->_state != RtcError && millis() < 1000 * AWAKE_SECONDS_AFTER_FIRST_BOOT && esp_sleep_get_wakeup_cause() != ESP_SLEEP_WAKEUP_TIMER)
+  if (millis() < 1000 * AWAKE_SECONDS_AFTER_FIRST_BOOT && esp_sleep_get_wakeup_cause() != ESP_SLEEP_WAKEUP_TIMER)
     return;
 
   Serial.println("[I] Going to deepsleep...");

@@ -1,10 +1,54 @@
 #include "RealTime.h"
 
+#include <FS.h>
+#include <LittleFS.h>
+
 RealTime::RealTime() : _state(Unavailable)
 {
   this->_rtc = new RTC_DS3231();
 
   this->_init();
+}
+
+// --- fs helpers ---
+String _readFile(fs::FS &fs, const char *path)
+{
+  Serial.printf("Reading file: %s\r\n", path);
+  if (!fs.exists(path))
+  {
+    Serial.println("- file does not exist");
+    return String();
+  }
+  File file = fs.open(path, "r");
+  if (!file || file.isDirectory())
+  {
+    Serial.println("- empty file or failed to open file");
+    return String();
+  }
+  Serial.println("- read from file:");
+  String fileContent;
+  while (file.available())
+  {
+    fileContent += String((char)file.read());
+  }
+  file.close();
+  Serial.println(fileContent);
+  return fileContent;
+}
+
+bool _writeFile(fs::FS &fs, const char *path, const char *message)
+{
+  Serial.printf("Writing file: %s\r\n", path);
+  File file = fs.open(path, "w");
+  if (!file)
+  {
+    Serial.println("- failed to open file for writing");
+    return false;
+  }
+
+  bool ret = file.print(message);
+  file.close();
+  return ret;
 }
 
 void RealTime::_init()
@@ -16,6 +60,16 @@ void RealTime::_init()
     this->_setTime(0, false);
     return;
   }
+
+  if (!LittleFS.begin(true))
+  {
+    Serial.println("[ERROR] LittleFS offline");
+    _state = Unavailable;
+    this->_setTime(0, false);
+    return;
+  }
+
+  this->_setTimezone(_readFile(LittleFS, "/timezone").c_str(), false);
 
   Serial.println("[I] RTC online");
   _state = Available;
@@ -56,10 +110,20 @@ void RealTime::setTime(time_t time)
   this->_setTime(time, true);
 }
 
-void RealTime::setTimezone(String timezone)
+bool RealTime::setTimezone(String timezone)
+{
+  return _setTimezone(timezone.c_str(), true);
+}
+
+bool RealTime::_setTimezone(String timezone, bool store)
 {
   setenv("TZ", timezone.c_str(), 1);
   tzset();
+
+  if (!store)
+    return true;
+
+  return _writeFile(LittleFS, "/timezone", timezone.c_str());
 }
 
 void RealTime::_setTime(time_t time, bool isValid)
