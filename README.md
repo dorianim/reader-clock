@@ -10,6 +10,10 @@
 
 Simply time - but different!
 
+<img height="400px" src="https://github.com/dorianim/reader-clock/assets/30153207/9211ac49-1091-4b3d-998f-f3657e29a3f0" />
+
+A clock, which shows the current time in form of a quote from a book.
+
 ### Setup
 - When the ReaderClock is powered in for the first time, it creates a Wi-Fi network
 - You need to connect to this network and will get a configuration page
