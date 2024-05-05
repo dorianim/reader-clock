@@ -29,11 +29,13 @@ private:
   WebServer *_webServer;
   DNSServer *_dnsServer;
   bool _running;
+  long long _updateFinishedAt;
   String _id;
   String _generateId();
 
   void _redirectToRoot();
-  void _handleIndex();
+  void _handleFormDatetime();
+  void _handleFormUpdate();
 };
 
 #endif

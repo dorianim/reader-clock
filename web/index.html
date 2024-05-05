@@ -22,6 +22,9 @@
         <h2>Date and Time</h2>
         <p>Here you can update the time and Date of your ReaderClock to match the clock of your device:</p>
 
+        <article id="form-datetime-result-card" style="display: none;">Date and Time update <b
+                id="form-datetime-result"></b></article>
+
         <form action="/form/datetime" method="post" enctype='multipart/form-data'>
             <hgroup>
                 <h4 id="datetime"></h4>
@@ -35,6 +38,21 @@
                 <input type="text" id="posix-timezone" name="timezone" value="UTC">
             </details>
             <button type="submit">Update Date and Time!</button>
+        </form>
+
+        <h2>Firmware Update</h2>
+        <p>Here you can update the software of your ReaderClock. Your current version is <b id="version">UNKNOWN</b> The
+            latest
+            release is available on
+            <a href="https://github.com/dorianim/reader-clock/releases/latest">GitHub</a>
+        </p>
+
+        <article id="form-update-result-card" style="display: none;">Firmware was update <b id="form-update-result"></b>
+        </article>
+
+        <form method='POST' action='/form/update' enctype='multipart/form-data'>
+            <input type='file' name='update'>
+            <button type='submit'>Update Firmware!</button>
         </form>
     </main>
 
@@ -61,7 +79,48 @@
             setTimeout(autofillFormWithCurrentDateTime, timeUntilNextSecond);
         }
 
-        document.addEventListener('DOMContentLoaded', autofillFormWithCurrentDateTime);
+        function fetchVersion() {
+            fetch('/api/version')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('version').textContent = data["version"];
+                });
+        }
+
+        function addResultBade() {
+            const hash = window.location.hash;
+            const [action, result] = hash.replace("#", "").split('=');
+            const success = result === "success";
+
+            const resultElement = document.getElementById(`${action}`);
+            if (!resultElement) return;
+            resultElement.textContent = success ? "SUCCESS" : "ERROR";
+
+            const resultCard = document.getElementById(`${action}-card`);
+            if (!resultCard) return;
+            resultCard.style.display = 'block';
+            resultCard.style.background = success ? 'var(--pico-ins-color)' : 'var(--pico-del-color)';
+            resultCard.style.color = 'var(--pico-primary-inverse)';
+
+        }
+
+        function makeButtonsLoadingOnClick() {
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                button.onclick = () => {
+                    button.setAttribute("aria-busy", "true")
+                    button.disabled = true;
+                    button.parentElement.submit();
+                };
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            makeButtonsLoadingOnClick();
+            autofillFormWithCurrentDateTime();
+            addResultBade();
+            fetchVersion();
+        });
     </script>
 </body>
 
