@@ -1,6 +1,6 @@
 #include "ReaderClock.h"
 
-#define AWAKE_SECONDS_AFTER_FIRST_BOOT (1 * 60)
+#define AWAKE_SECONDS_AFTER_FIRST_BOOT (5 * 60)
 
 ReaderClock::ReaderClock() : _state(Initing), _oldState(Initing)
 {
