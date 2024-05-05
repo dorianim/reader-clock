@@ -10,6 +10,18 @@
 
 Simply time - but different!
 
+### Setup
+- When the ReaderClock is powered in for the first time, it creates a Wi-Fi network
+- You need to connect to this network and will get a configuration page
+- On that page, press the button "Update Date and Time!"
+- Now your ReaderClock has the same date, time and timezone as your phone
+- You can always reconfigure this setting in the first five minutes after the ReaderClock is plugged in
+
+### Updating
+- To update, you need to disconnect and reconnect the ReaderClock from power to activate the configuration mode
+- Then you need to connect to its Wi-Fi hotspot like above
+- On the configuration page, scroll down to "Firmware Update" and upload the new firmware
+
 ### Disclaimer
 
 Huge thanks to these people for publishing their quotes:
@@ -19,12 +31,11 @@ Huge thanks to these people for publishing their quotes:
 
 ### Used Libs
 
-- [AutoConnect](https://github.com/Hieromon/AutoConnect)
 - [GxEPD2](https://github.com/ZinggJM/GxEPD2) (Stripped down to save some storage capacity)
 - [RTClib](https://github.com/adafruit/RTClib)
-- [ezTime](https://github.com/ropg/ezTime) (Stripped down with minor adjustments)
-- [moment.js]()
-- [moment-timezone.js]()
+- [Pico.css](https://picocss.com/)
+- [moment.js](https://momentjs.com/)
+- [moment-timezone.js](https://momentjs.com/timezone/)
 - [posix-timezone](https://github.com/moment/moment-timezone/issues/314#issuecomment-198226333)
 
 ### Used hardware
@@ -33,3 +44,16 @@ Huge thanks to these people for publishing their quotes:
 - RTC: [Amazon](https://www.amazon.de/-/en/dp/B07RGTFWS3), [AZDelivery](https://www.az-delivery.de/en/products/ds3231-real-time-clock)
 - E-Ink display: [Amazon](https://www.amazon.de/gp/product/B074NR1SW2), [Waveshare](https://www.waveshare.com/product/displays/e-paper/4.2inch-e-paper-module.htm)
 - Micro usb port: [Amazon](https://www.amazon.de/-/en/WayinTop-Pieces-Adaptor-Breakout-Converter/dp/B07W13X3TD/ref=sr_1_3)
+
+### Pins
+
+| Device  | Pin on Device | Pin on ESP |
+| ------- | ------------- | ---------- |
+| RTC     | SDA           | 21         |
+|         | SCL           | 22         |
+| DISPLAY | DIN           | 23         |
+|         | CLK           | 18         | 
+|         | CS            | 5          |
+|         | DC            | 15         |
+|         | RST           | 2          |
+|         | BUSY          | 4          |

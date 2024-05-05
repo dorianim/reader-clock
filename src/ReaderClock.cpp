@@ -1,6 +1,6 @@
 #include "ReaderClock.h"
 
-#define AWAKE_SECONDS_AFTER_FIRST_BOOT (5 * 60)
+#define AWAKE_SECONDS_AFTER_FIRST_BOOT (1 * 60)
 
 ReaderClock::ReaderClock() : _state(Initing), _oldState(Initing)
 {
@@ -43,7 +43,7 @@ void ReaderClock::_updateDisplay()
     if (this->_oldState == NoValidTime)
       break;
 
-    String message = "No valid time set! Please connect to the wifi network \"" + this->_configPortal->networkName() + "\" in order to sync the time.";
+    String message = "No valid time set! Please connect to the wifi network \"" + this->_configPortal->networkName() + "\" to sync the time.";
     this->_display->showWarning(message.c_str());
     break;
   }
@@ -85,7 +85,7 @@ void ReaderClock::_drawQuoteToDisplay()
 
   if (this->_currentHour != newHour || this->_currentMinute != newMinute)
   {
-    Serial.printf("Current time: %d:%d\n", newHour, newMinute);
+    Serial.printf("[I] Current time: %d:%d\n", newHour, newMinute);
     this->_currentHour = newHour;
     this->_currentMinute = newMinute;
     Quote quoteToDisplay = this->_quotes->findQuoteMatchingTime(
@@ -108,14 +108,26 @@ void ReaderClock::_startConfigPortalIfNecessary()
 
 void ReaderClock::_goToSleepIfNecessary()
 {
-  if (this->_state != ShowingQuotes)
-    return;
+  // Rules:
+  // - If there is an RTC Error, go to sleep
+  // - If there is no valid timer after AWAKE_SECONDS_AFTER_FIRST_BOOT, go to sleep
+  // - If we are showing quotes
+  //   - If it is the first boot, go to slep after AWAKE_SECONDS_AFTER_FIRST_BOOT and wake up in time for the next minute
+  //   - If it is not the first boot, go to sleep and wake up in time for the next minute
 
-  if (millis() < 1000 * AWAKE_SECONDS_AFTER_FIRST_BOOT && esp_sleep_get_wakeup_cause() != ESP_SLEEP_WAKEUP_TIMER)
+  if (this->_state != RtcError && millis() < 1000 * AWAKE_SECONDS_AFTER_FIRST_BOOT && esp_sleep_get_wakeup_cause() != ESP_SLEEP_WAKEUP_TIMER)
     return;
 
   Serial.println("[I] Going to deepsleep...");
-  int wakeUpInSeconds = 60 - this->_time->getSecond();
-  esp_sleep_enable_timer_wakeup(wakeUpInSeconds * 1000 * 1000);
+
+  if (this->_state == ShowingQuotes)
+  {
+    int wakeUpInSeconds = 60 - this->_time->getSecond();
+    esp_sleep_enable_timer_wakeup(wakeUpInSeconds * 1000 * 1000);
+  }
+
+  if (this->_state == NoValidTime)
+    this->_display->showWarning("No valid time set! Please disconnect the power and connect it again to configure.");
+
   esp_deep_sleep_start();
 }
