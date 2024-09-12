@@ -24,7 +24,4 @@ jobs:
         
       - uses: ncipollo/release-action@v1
         with:
-          artifacts: 
-            - ".pio/build/esp32dev/firmware-merged.bin"
-            - ".pio/build/esp32dev/firmware.bin"
-          
+          artifacts: ".pio/build/esp32dev/firmware*.bin"
