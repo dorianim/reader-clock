@@ -35,7 +35,7 @@ Huge thanks to these people for publishing their quotes:
 
 ### Used Libs
 
-- [GxEPD2](https://github.com/ZinggJM/GxEPD2) (Stripped down to save some storage capacity)
+- [GxEPD2](https://github.com/ZinggJM/GxEPD2)
 - [RTClib](https://github.com/adafruit/RTClib)
 - [Pico.css](https://picocss.com/)
 - [moment.js](https://momentjs.com/)
