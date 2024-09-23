@@ -72,9 +72,7 @@ void RealTime::_init()
   this->_setTimezone(_readFile(LittleFS, "/timezone").c_str(), false);
 
   Serial.println("[I] RTC online");
-  _state = Available;
 
-  _state = Available;
   DateTime now = this->_rtc->now();
 
   if (this->_rtc->lostPower() || now.year() < 2024)
@@ -86,7 +84,8 @@ void RealTime::_init()
   }
 
   Serial.printf("[I] RTC has valid time: %d-%d-%d %d:%d:%d\n", now.year(), now.month(), now.day(), now.hour(), now.minute(), now.second());
-  this->_setTime(now.unixtime(), true);
+  this->_setTime(now.unixtime(), false);
+  _state = Available;
 }
 
 int RealTime::getHour()
@@ -126,7 +125,7 @@ bool RealTime::_setTimezone(String timezone, bool store)
   return _writeFile(LittleFS, "/timezone", timezone.c_str());
 }
 
-void RealTime::_setTime(time_t time, bool isValid)
+void RealTime::_setTime(time_t time, bool store)
 {
   timeval tv = {
       .tv_sec = time,
@@ -134,7 +133,7 @@ void RealTime::_setTime(time_t time, bool isValid)
   };
   settimeofday(&tv, nullptr);
 
-  if (isValid)
+  if (store)
   {
     this->_rtc->adjust(DateTime(time));
     this->_state = Available;

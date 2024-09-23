@@ -31,7 +31,7 @@ private:
 
   void _init();
   void _handleNtpUpdate();
-  void _setTime(time_t time, bool isValid);
+  void _setTime(time_t time, bool store);
   bool _setTimezone(String timezone, bool store);
 
   static void _ntpUdateHandler(void *args);
